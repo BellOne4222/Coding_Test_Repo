@@ -31,3 +31,4 @@ def solution(N, number):
             break
     
     return minimum
+
