@@ -1,10 +1,9 @@
-# 2. print(solution([2, 1, 4, 3, 6, 5, 8, 7, 10, 9])) 이 예제를 보니 sub에 아무 상자도 없을때에도 바로 종료가 되버려서 main에는 상자가 있고 sub에는 상자가 없을 때 
-# main에 있는 상자를 sub로 옮겨 주면서 비교하게 다시 구현해서 반례 해결했지만 테스트 케이스는 1개 빼고 다 실패...
+# 밑의 로직대로 구현해서 예제 테스트 케이스 들은 다 통과를 했지만 제출 하고 난 테스트 케이스는 모두 실패...
 
 from collections import deque
 
 def solution(order):
-    main = [i for i in range(1,len(order)+1)] # 영재 컨베이어 벨트
+    main = [1,2,3,4,5] # 영재 컨베이어 벨트
     main = deque(main)
     sub = deque() # 보조 컨베이어 벨트
     idx = 0
@@ -30,11 +29,6 @@ def solution(order):
             sub.popleft()
             box += 1
             idx += 1
-        elif main and not sub and order[idx] != main[0]:
-            wait = main.popleft()
-            sub.append(wait)
         # main과 sub 둘 다 택배 기사의 순서와 맞는 상자를 뺄 수 없으면 종료
         else: 
             return box
-        
-print(solution([2, 1, 4, 3, 6, 5, 8, 7, 10, 9]))
