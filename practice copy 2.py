@@ -1,9 +1,10 @@
-# 밑의 로직대로 구현해서 예제 테스트 케이스 들은 다 통과를 했지만 제출 하고 난 테스트 케이스는 모두 실패...
+# 3. [3, 5, 4, 2, 1] 반례를 돌려봤더니 main과 sub 둘다 상자가 있을 때 main의 첫번째 상자와 넣어야할 상자의 순서가 맞지 않았을 때의 경우를 지정을 안해줘서
+# 프로그램이 종료가 되어서 둘 다 있을 때에도 main에서 sub로 상자 이동을 하는 구문을 만들어 줘서 solve...
 
 from collections import deque
 
 def solution(order):
-    main = [1,2,3,4,5] # 영재 컨베이어 벨트
+    main = [i for i in range(1,len(order)+1)] # 영재 컨베이어 벨트
     main = deque(main)
     sub = deque() # 보조 컨베이어 벨트
     idx = 0
@@ -29,6 +30,15 @@ def solution(order):
             sub.popleft()
             box += 1
             idx += 1
+        elif main and not sub and order[idx] != main[0]:
+            wait = main.popleft()
+            sub.appendleft(wait)
+        elif main and sub and order[idx] != main[0]:
+            wait = main.popleft()
+            sub.appendleft(wait)
         # main과 sub 둘 다 택배 기사의 순서와 맞는 상자를 뺄 수 없으면 종료
         else: 
             return box
+        
+print(solution([3, 5, 4, 2, 1]))
+# 5
