@@ -1,34 +1,14 @@
-# 밑의 로직대로 구현해서 예제 테스트 케이스 들은 다 통과를 했지만 제출 하고 난 테스트 케이스는 모두 실패...
-
-from collections import deque
-
-def solution(order):
-    main = [1,2,3,4,5] # 영재 컨베이어 벨트
-    main = deque(main)
-    sub = deque() # 보조 컨베이어 벨트
-    idx = 0
-    box = 0
+def solution(triangle):
+    triangle = triangle[::-1]
+    # 	[[4, 5, 2, 6, 5], [2, 7, 4, 4], [8, 1, 0], [3, 8], [7]]
     
-
-    # 첫 번째 while문은 order[0] == main[0] 때까지 main의 박스들을 sub로 옮겨준다
-    while True:
-        if order[idx] != main[0]:
-            wait = main.popleft()
-            sub.appendleft(wait)
-        else:
-            break
+    # 밑에서 부터 삼각형 한 줄씩 반복
+    for i in range(len(triangle)):
+        # 큰 삼각형 안에서 작은 삼각형으로 쪼개어서 하나씩 연산, 윗변의 값과 밑변의 2개의 값을 각각 더해주고 둘 중의 최대값으로 리스트 재구성해서 로직 반복 하여 삼각형 맨 위의 값을 출력
+        for j in range(len(triangle[i])-1):
+            triangle[i+1][j] = max((triangle[i][j] + triangle[i+1][j]) , (triangle[i][j+1] + triangle[i+1][j]))
     
-    # 두 번째 while은 main[0]과 sub[0]을 order[idx]과 비교하고 둘 중에 하나라도 같으면 트럭에 싣고 비교 대상을 order의 다음 원소로 이동
-    # 둘 다 없으면 상차를 그만한다.
-    while True:
-        if main and order[idx] == main[0]:
-            main.popleft()
-            box += 1 # 트럭에 싣는다
-            idx += 1
-        elif sub and order[idx] == sub[0]:
-            sub.popleft()
-            box += 1
-            idx += 1
-        # main과 sub 둘 다 택배 기사의 순서와 맞는 상자를 뺄 수 없으면 종료
-        else: 
-            return box
+    # 삼각형 맨 끝 값 반환
+    return triangle[len(triangle)-1][0]
+
+print(solution([[7], [3, 8], [8, 1, 0], [2, 7, 4, 4], [4, 5, 2, 6, 5]]))
