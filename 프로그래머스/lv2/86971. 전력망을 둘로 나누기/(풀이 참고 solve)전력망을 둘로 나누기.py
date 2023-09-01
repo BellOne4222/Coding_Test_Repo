@@ -1,3 +1,7 @@
+# bfs 풀이
+# 근처 노드를 먼저 탐색을 하며 나아가고, 노드 마다 잘라서 두 구역을 나누고 한 구역의 연결되어있는 노드 개수를 파악하고, 다른 한쪽은 전체 노드 개수에서 빼는 방식 구현
+# 최대 영역의 송전탑 개수와 최소 영역의 송전탑 개수 차이 중의 최솟값을 반환하는 방식 구현 중 모르겠어서 풀이 참고
+
 # bfs 견본
 # from collections import deque
 
@@ -51,3 +55,5 @@ def solution(n, wires):
             answer = max_transmission - min_transmission
 
     return answer
+
+print(solution(9,[[1,3],[2,3],[3,4],[4,5],[4,6],[4,7],[7,8],[7,9]]))
