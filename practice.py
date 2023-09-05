@@ -1,34 +1,43 @@
-def dfs(graph, v, visited):
-    # 현재 노드를 방문 처리
-    visited[v] = True
+n = int(input())
 
-    # 현재 노드와 연결된 노드를 재귀적으로 방문
-    for i in graph[v]:
-        if not visited[i]: # visited[i] = False이면
-            dfs(graph, i, visited)
-
+houses = []
 graph = []
+for _ in range(n):
+    graph.append(list(map(int,input())))
 
-visited = [False] * 9
+dx = [-1,1,0,0]
+dy = [0,0,-1,1]    
+    
+def dfs(x,y):
+    
+    if x < 0 or x >= n or y < 0 or y >= n:
+        return False
+    
+    if graph[x][y] == 1:
+        global house_cnt
+        house_cnt += 1
+        graph[x][y] = 0
+        for i in range(4):
+            nx = x + dx[i]
+            ny = y + dy[i]
+            dfs(nx,ny)
+        return True
+    return False
+    
 
-dfs(graph, 1, visited)
+house_cnt = 0
+village_cnt = 0
 
 
-from collections import deque
+for j in range(n):
+    for k in range(n):
+        if dfs(j,k) == True:
+            houses.append(house_cnt)
+            village_cnt += 1
+            houses_cnt = 0
 
-def bfs(graph, start, visited):
-    queue = deque([start])
-    visited[start] = True
-
-    while queue:
-        v = queue.popleft()
-        for i in graph[v]:
-            if not visited[i]:
-                queue.append(i)
-                visited[i] = True
-
-graph = []
-
-visited = [False] * 9
-
-bfs(graph, 1, visited)
+# 오름차순 정렬
+houses.sort()
+print(village_cnt)
+for l in range(len(houses)):
+    print(houses[l])
