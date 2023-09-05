@@ -19,17 +19,12 @@ def bfs(x,y):
             nx = x + dx[j]
             ny = y + dy[j]
             # 범위 내인지 확인
-            if nx < 0 or nx >= n or ny < 0 or ny >= m:
-                continue
-            # 벽이므로 진행 불가
-            if graph[nx][ny] == 0:
-                continue
-            # 갈 수 있는 칸이면,
-            if graph[nx][ny] == 1:
-                # 탐색 실행
-                queue.append((nx,ny))
-                # 다음 칸을 현재 칸에 +1을 해서 거리 표시
-                graph[nx][ny] = graph[x][y] + 1
+            if nx >= 0 and nx < n and ny >= 0 and ny < m:
+                if graph[nx][ny] == 1:
+                    # 탐색 실행
+                    queue.append((nx,ny))
+                    # 다음 칸을 현재 칸에 +1을 해서 거리 표시
+                    graph[nx][ny] = graph[x][y] + 1
     return graph[n-1][m-1]
 
 print(bfs(0,0))
