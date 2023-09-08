@@ -1,12 +1,10 @@
 from collections import deque
 import sys
 input = sys.stdin.readline
-sys.setrecursionlimit(10**6)
 
 n, m, k, x = map(int,input().split())
 
 graph = [[] for _ in range(n+1)]
-paths = [0] * (n+1)
 
 for _ in range(m):
     s, e = map(int,input().split())
@@ -14,7 +12,7 @@ for _ in range(m):
 
 visited = [False] * (n+1)
 
-def bfs(start):
+def bfs(start, path):
     vertex = []
     queue = deque([start])
     visited[start] = True
@@ -24,8 +22,8 @@ def bfs(start):
             if not visited[i]:
                 visited[i] = True
                 queue.append(i)
-                paths[i] = paths[v] + 1
-                if paths[i] == k:
+                path += 1
+                if path == k:
                     vertex.append(i)
     if len(vertex) == 0:
         print(-1)
@@ -36,4 +34,4 @@ def bfs(start):
                 
     
 
-bfs(x)
+bfs(x,0)
