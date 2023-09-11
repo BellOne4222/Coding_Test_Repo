@@ -32,4 +32,6 @@ def solution(tickets):
     DFS()  # DFS 함수를 호출하여 여행 경로를 찾음
     return result[::-1]  # 결과 리스트를 역순으로 반환 (ICN부터 출발하는 경로)
 
+
+
 print(solution([["ICN", "JFK"], ["HND", "IAD"], ["JFK", "HND"]]))
