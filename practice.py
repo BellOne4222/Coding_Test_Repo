@@ -1,22 +1,16 @@
-# n = int(input())
-n = 4
-
-road = [2, 3, 1]
-# for _ in range(n-1):
-#     road = list(map(int,input().split()))
-    
-
-city = [5, 2, 4, 1]
-# for _ in range(n):
-#     city = list(map(int,input().split()))
-
-oil_price = city[0]
-distance = road[0] * oil_price  
-    
-for i in range(1,n-1):
-    if city[i] < oil_price:
-        oil_price = city[i]
-        distance += (road[i] * oil_price)
-    else:
-        distance += (road[i] * oil_price)
-print(distance)
+def solution(routes):
+    routes.sort()
+    camera = 0
+    start = routes[0][0]
+    end = routes[0][1]
+    section = [start,end]
+    for i in range(1, len(routes)):
+        if start <= routes[i][0] <= end:
+            camera += 1
+            start = routes[i][0]
+            if start > end:
+                start, end = end, start
+        else:
+            start = routes[i][0]
+            end = routes[i][1]
+    return routes
