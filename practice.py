@@ -1,16 +1,31 @@
-def solution(routes):
-    routes.sort()
-    camera = 0
-    start = routes[0][0]
-    end = routes[0][1]
-    section = [start,end]
-    for i in range(1, len(routes)):
-        if start <= routes[i][0] <= end:
-            camera += 1
-            start = routes[i][0]
-            if start > end:
-                start, end = end, start
-        else:
-            start = routes[i][0]
-            end = routes[i][1]
-    return routes
+# n = input()
+n = "quackquackquackquackquackquackquackquackquackquack"
+n = str(n)
+
+right = "quack"
+
+idx = 0
+
+pair = 0
+
+alright = 0
+
+is_right = 0
+
+duck = 0
+for i in range(len(n)):
+    if n[i] == right[idx]:
+        alright += 1
+        is_right += 1
+        idx += 1
+    if alright == 5:
+        idx = 0
+        alright = 0
+        duck += 1
+    if duck >= 2 and is_right == i+1:
+        duck -= 1
+
+if duck == 0:
+    print(-1)
+else:
+    print(duck)

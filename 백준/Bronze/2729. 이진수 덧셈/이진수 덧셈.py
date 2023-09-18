@@ -1,3 +1,6 @@
+# int(value, base)
+# bin() -> 2진수로 변환, 앞에 0b가 붙으므로 print 할때는 잘라야한다.
+
 n = int(input())
 
 for i in range(n):
