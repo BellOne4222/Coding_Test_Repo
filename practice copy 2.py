@@ -27,8 +27,8 @@ for l in range(n):
                 option[j] = option[j][:k] +"[" + option[j][k] + "]" + option[j][k+1:]
               else:
                 option[j] = option[j][:k] +"[" + option[j][k] + "]"
-                flag = True
-                break
+              flag = True
+              break
           if flag:
              break
     print(' '.join(option))
