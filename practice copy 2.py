@@ -1,45 +1,66 @@
+# n = int(input())
+n = 5
+
+short = ["New","Open","Save","Save As","Save All"]
 
 
-import sys
-my_input = sys.stdin.readline
+keys = []
+for l in range(n):
+    
+    flag = False
+    # option = list(input().split())
+    option = list(short[l].split())
+    for i in range(len(option)):
+        if option[i][0] not in keys:
+            keys.append(option[i][0])
+            flag = True
+            option[i] = "[" + option[i][0] + "]" + option[i][1:]
+            break
+    if not flag:
+        for j in range(len(option)):
+          flag = False
+          for k in range(len(option[j])):
+            check = option[j][k].upper()
+            if check not in keys:
+              keys.append(check)
+              if k != len(option[j])-1:
+                option[j] = option[j][:k] +"[" + option[j][k] + "]" + option[j][k+1:]
+              else:
+                option[j] = option[j][:k] +"[" + option[j][k] + "]"
+                flag = True
+                break
+          if flag:
+             break
+    print(' '.join(option))
 
-if __name__ == "__main__":
-	T = 3
 
-	for tc in range(T):
-		n1, n2 = "1001101", "10010"
+# option = [] # 단축키 리스트
 
-		if n1 == '0' and n2 == '0':
-			print(0)
+# for i in range(n):
+#     inp_list = list(short[i].split())
+    
+#     flag = 0 # 첫 글자가 단축키로 지정될 수 있는지
+#     data = []
+#     for j in range(len(inp_list)):
+#         if inp_list[j][0].lower() not in option and inp_list[j][0].upper() not in option:
+#             option.append(inp_list[j][0])
+#             flag = 1
+#             inp_list[j] = '[' + inp_list[j][0] + ']' + inp_list[j][1:]
+#             break
 
-		else:
-			len_n1, len_n2 = len(n1), len(n2)
-			if len_n1 != 80:
-				n1 = '0'*(80-len_n1)+n1
-			if len_n2 != 80:
-				n2 = '0'*(80-len_n2)+n2
-
-			rst_num = []
-			tmp = 0
-			for idx in range(80):
-				now_sum = int(n1[79-idx])+int(n2[79-idx])+tmp
-				if now_sum <= 1:
-					rst_num.append(str(now_sum))
-					tmp = 0
-				elif now_sum == 2:
-					rst_num.append('0')
-					tmp = 1
-				elif now_sum == 3:
-					rst_num.append('1')
-					tmp = 1
-
-				if tmp == 1 and idx == 79:
-					rst_num.append('1')
-
-			len_rst_num = len(rst_num)
-			for c in range(len_rst_num):
-				if rst_num[len_rst_num-1-c] == '0':
-					rst_num.pop()
-				else:
-					break
-			print(''.join(rst_num[::-1]))
+        
+#     if flag == 0: # 첫 글자가 단축키로 지정될 수 없는 경우
+#         for j in range(len(inp_list)):
+#             flag = 0
+#             for k in range(len(inp_list[j])):
+#                 if inp_list[j][k].lower() not in option and inp_list[j][k].upper() not in option:  # 단축키 설정 가능
+#                     option.append(inp_list[j][k])
+#                     if k != len(inp_list[j])-1:
+#                         inp_list[j] = inp_list[j][:k] + '[' + inp_list[j][k] + ']' + inp_list[j][k + 1:]
+#                     else:
+#                         inp_list[j] = inp_list[j][:k] + '[' + inp_list[j][k] + ']'
+#                     flag = 1
+#                     break
+#             if flag:
+#                 break
+#     print(' '.join(inp_list))
