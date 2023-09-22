@@ -1,42 +1,61 @@
-king, stone, move = input().split()
-# king, stone, move = "C1", "B1", "3"
-# locations = ["L","T","LB"]
-king = list(king)
-stone = list(stone)
-move = int(move)
-# ['A', '1'] ['A', '2'] 5
+n = int(input())
 
-col_alpha = ["A","B","C","D","E","F","G","H"]
-col = dict() # num to alpha
-for j in range(1,9):
-    col[j] = col_alpha[j-1]
-col_rev = {v:k for k,v in col.items()} # alpha to num
-row = [i for i in range(1,9)]
-# {1: 'A', 2: 'B', 3: 'C', 4: 'D', 5: 'E', 6: 'F', 7: 'G', 8: 'H'}
-# {'A': 1, 'B': 2, 'C': 3, 'D': 4, 'E': 5, 'F': 6, 'G': 7, 'H': 8}
+classroom = [[0 for _ in range(n)] for _ in range(n)]
 
-moving = {'R': [1, 0], 'L': [-1, 0], 'B': [0, -1], 'T': [0, 1], 'RT': [1, 1], 'LT': [-1, 1], 'RB': [1, -1], 'LB': [-1, -1]}
 
-for i in range(move):
-    locate = input()
-    # locate = locations[i]
-    nx = col_rev[king[0]] + moving[locate][0]
-    ny = int(king[1]) + moving[locate][1]
-    if 1 <= nx <= 8 and 1 <= ny <= 8:
-        if col[nx] == stone[0] and ny == int(stone[1]):
-            s_nx = col_rev[stone[0]] + moving[locate][0]
-            s_ny = int(stone[1]) + moving[locate][1]
-            if 1 <= s_nx <= 8 and 1 <= s_ny <= 8:
-                king[0], king[1] = col[nx], ny
-                stone[0], stone[1] = col[s_nx], s_ny
+# 비어있는 칸 중에서 좋아하는 학생이 인접한 칸에 가장 많은 칸으로 자리를 정한다.
+# 1을 만족하는 칸이 여러 개이면, 인접한 칸 중에서 비어있는 칸이 가장 많은 칸으로 자리를 정한다.
+# 2를 만족하는 칸도 여러 개인 경우에는 행의 번호가 가장 작은 칸으로, 그러한 칸도 여러 개이면 열의 번호가 가장 작은 칸으로 자리를 정한다.
+
+dr = [-1,1,0,0]
+dc = [0,0,-1,1]
+
+students = [list(map(int, input().split())) for _ in range(n**2)]
+
+
+# 자리 배치
+for i in range(n*n):
+    student = students[i]
+    # 4 [2, 5, 1, 7]
+
+    seat_info = []
+        
+    for r in range(n):
+        for c in range(n):
+            if classroom[r][c] == 0:
+                prefer = 0 # 선호하는 사람 수
+                empty = 0 # 빈 자리 수
+                for k in range(4):
+                    nr = r + dr[k]
+                    nc = c + dc[k]
+                    if 0 <= nr < n and 0 <= nc < n:
+                        if classroom[nr][nc] in student[1:]:
+                            prefer += 1
+                        if classroom[nr][nc] == 0:
+                            empty += 1
+                seat_info.append([prefer, empty, r, c])
+    seat_info.sort(key = lambda x:(-x[0],-x[1],x[2],x[3])) # 3가지 조건에 따라, 선호하는 학생 수, 주변 빈 자리수, 행 번호, 열번호 순으로 정렬
+    classroom[seat_info[0][2]][seat_info[0][3]] = students[0]
+print(seat_info)
+# 만족도 조사
+total_sum = 0
+
+students.sort()
+print(classroom)
+
+
+for r in range(n):
+    for c in range(n):
+        like = 0
+        for k in range(4):
+            nr = r + dr[k]
+            nc = c + dc[k]
+            if 0 <= nr < n and 0 <= nc < n:
+                if classroom[nr][nc] in students[classroom[r][c]-1]:
+                    like += 1
+        if like == 0:
+            total_sum += 0
         else:
-            king[0], king[1] = col[nx], ny
+            total_sum += (10 ** (like-1))
 
-king[0] = str(king[0])
-king[1] = str(king[1])
-
-stone[0] = str(stone[0])
-stone[1] = str(stone[1])
-
-print(''.join(king))
-print(''.join(stone))
+print(total_sum)
