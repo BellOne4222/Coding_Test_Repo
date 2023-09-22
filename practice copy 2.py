@@ -1,66 +1,43 @@
-# n = int(input())
-n = 5
+# king, stone, move = input().split()
+king, stone, move = "C1", "B1", "3"
+locations = ["L","T","LB"]
+# king, stone, move = input().split()
+king = list(king)
+stone = list(stone)
+move = int(move)
+# ['A', '1'] ['A', '2'] 5
 
-short = ["New","Open","Save","Save As","Save All"]
+col_alpha = ["A","B","C","D","E","F","G","H"]
+col = dict() # num to alpha
+for j in range(1,9):
+    col[j] = col_alpha[j-1]
+col_rev = {v:k for k,v in col.items()} # alpha to num
+row = [i for i in range(1,9)]
+# {1: 'A', 2: 'B', 3: 'C', 4: 'D', 5: 'E', 6: 'F', 7: 'G', 8: 'H'}
+# {'A': 1, 'B': 2, 'C': 3, 'D': 4, 'E': 5, 'F': 6, 'G': 7, 'H': 8}
 
+moving = {'R': [1, 0], 'L': [-1, 0], 'B': [0, -1], 'T': [0, 1], 'RT': [1, 1], 'LT': [-1, 1], 'RB': [1, -1], 'LB': [-1, -1]}
 
-keys = []
-for l in range(n):
-    
-    flag = False
-    # option = list(input().split())
-    option = list(short[l].split())
-    for i in range(len(option)):
-        if option[i][0] not in keys:
-            keys.append(option[i][0])
-            flag = True
-            option[i] = "[" + option[i][0] + "]" + option[i][1:]
-            break
-    if not flag:
-        for j in range(len(option)):
-          flag = False
-          for k in range(len(option[j])):
-            check = option[j][k].upper()
-            if check not in keys:
-              keys.append(check)
-              if k != len(option[j])-1:
-                option[j] = option[j][:k] +"[" + option[j][k] + "]" + option[j][k+1:]
-              else:
-                option[j] = option[j][:k] +"[" + option[j][k] + "]"
-              flag = True
-              break
-          if flag:
-             break
-    print(' '.join(option))
+for i in range(move):
+    # locate = input()
+    locate = locations[i]
+    nx = col_rev[king[0]] + moving[locate][0]
+    ny = int(king[1]) + moving[locate][1]
+    if 1 <= nx <= 8 and 1 <= ny <= 8:
+        if col[nx] == stone[0] and ny == int(stone[1]):
+            s_nx = col_rev[stone[0]] + moving[locate][0]
+            s_ny = int(stone[1]) + moving[locate][1]
+            if 1 <= s_nx <= 8 and 1 <= s_ny <= 8:
+                king[0], king[1] = col[nx], ny
+                stone[0], stone[1] = col[s_nx], s_ny
+        else:
+            king[0], king[1] = col[nx], ny
 
+king[0] = str(king[0])
+king[1] = str(king[1])
 
-# option = [] # 단축키 리스트
+stone[0] = str(stone[0])
+stone[1] = str(stone[1])
 
-# for i in range(n):
-#     inp_list = list(short[i].split())
-    
-#     flag = 0 # 첫 글자가 단축키로 지정될 수 있는지
-#     data = []
-#     for j in range(len(inp_list)):
-#         if inp_list[j][0].lower() not in option and inp_list[j][0].upper() not in option:
-#             option.append(inp_list[j][0])
-#             flag = 1
-#             inp_list[j] = '[' + inp_list[j][0] + ']' + inp_list[j][1:]
-#             break
-
-        
-#     if flag == 0: # 첫 글자가 단축키로 지정될 수 없는 경우
-#         for j in range(len(inp_list)):
-#             flag = 0
-#             for k in range(len(inp_list[j])):
-#                 if inp_list[j][k].lower() not in option and inp_list[j][k].upper() not in option:  # 단축키 설정 가능
-#                     option.append(inp_list[j][k])
-#                     if k != len(inp_list[j])-1:
-#                         inp_list[j] = inp_list[j][:k] + '[' + inp_list[j][k] + ']' + inp_list[j][k + 1:]
-#                     else:
-#                         inp_list[j] = inp_list[j][:k] + '[' + inp_list[j][k] + ']'
-#                     flag = 1
-#                     break
-#             if flag:
-#                 break
-#     print(' '.join(inp_list))
+print(''.join(king))
+print(''.join(stone))
