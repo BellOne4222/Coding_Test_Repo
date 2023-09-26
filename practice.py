@@ -10,7 +10,7 @@ classroom = [[0 for _ in range(n)] for _ in range(n)]
 dr = [-1,1,0,0]
 dc = [0,0,-1,1]
 
-students = [list(map(int, input().split())) for _ in range(n**2)]
+students = [list(map(int, input().split())) for _ in range(n*n)]
 
 
 # 자리 배치
@@ -35,7 +35,7 @@ for i in range(n*n):
                             empty += 1
                 seat_info.append([prefer, empty, r, c])
     seat_info.sort(key = lambda x:(-x[0],-x[1],x[2],x[3])) # 3가지 조건에 따라, 선호하는 학생 수, 주변 빈 자리수, 행 번호, 열번호 순으로 정렬
-    classroom[seat_info[0][2]][seat_info[0][3]] = students[0]
+    classroom[seat_info[0][2]][seat_info[0][3]] = student[0]
 print(seat_info)
 # 만족도 조사
 total_sum = 0
