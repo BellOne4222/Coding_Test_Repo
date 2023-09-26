@@ -18,25 +18,12 @@ for i in range(1, 2*n+1):
     
     
     
-o_idx= 0
-i_idx = 0
-
-while True:
-    if outer[o_idx] != inner[0]:
-        o_idx += 1
+for j in range(n):
+    if outer[j] != inner[0]:
         passing += 1
+        inner.remove(outer[j])
     else:
-        break
-
-
-compare = outer[o_idx:]
-for k in range(len(compare)):
-    if outer[o_idx] == inner[i_idx]:
-        o_idx += 1
-        i_idx += 1
-    else:
-        passing += 1
-        o_idx += 1
+        inner.pop(0)
 
 
 print(passing)
