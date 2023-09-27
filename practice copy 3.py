@@ -1,53 +1,22 @@
-def what_is_longest(graph, n):
-    part = 0
-    for i in range(n):
-        pair = 1 # 연속 개수 
-        for j in range(1,n):
-            if graph[i][j] == graph[i][j-1]:
-                pair += 1
-            else:
-                pair = 1
-            part = max(part, pair)
-        
-        pair = 1
-        for j in range(1,n):
-            if graph[j][i] == graph[j-1][i]:
-                pair += 1
-            else:
-                pair = 1
-            part = max(part, pair)
-    
-    return part
-
-
-
-
+#동1 서2 남3 북4
+whole = [] # 방향, 거리 저장 리스트
+top = [] # 가로 길이들 리스트
+side = [] # 세로 길이들 리스트
+part = [] # B의 가로 세로 길이
 
 n = int(input())
 
-candys = [list(input()) for _ in range(n)]
-longest_part = 0 # 가장 긴 연속한 부분의 길이
+for i in range(6):
+    direction,m = map(int,input().split()) # 방향, 거리 입력
+    whole.append([direction,m])
+    if whole[i][0] == 3 or whole[i][0] == 4: # 세로 저장
+        top.append(whole[i][1])
+    if whole[i][0] == 1 or whole[i][0] == 2: # 가로 저장
+        side.append(whole[i][1])
 
+for i in range(6):
+    if whole[i][0] == whole[(i+2)%6][0]:
+        part.append(whole[(i+1)%6][1])
 
-for i in range(n):
-    for j in range(n):
-        # 지금 칸과 인접한 칸을 비교해야하기 때문에 다음 칸이 범위 안에 있을 수 있도록 설정
-        if (j+1) < n:
-            candys[i][j], candys[i][j+1] = candys[i][j+1], candys[i][j]
-
-            compare = what_is_longest(candys,n)
-
-            longest_part = max(longest_part, compare)
-
-            candys[i][j], candys[i][j+1] = candys[i][j+1], candys[i][j]
-        
-        if (i+1) < n:
-            candys[i][j], candys[i+1][j] = candys[i+1][j], candys[i][j]
-
-            compare = what_is_longest(candys,n)
-
-            longest_part = max(longest_part, compare)
-
-            candys[i][j], candys[i+1][j] = candys[i+1][j], candys[i][j]
-
-print(longest_part)
+yellow_melon = ((max(top)*max(side)) - (part[0]*part[1])) * n
+print(yellow_melon)
