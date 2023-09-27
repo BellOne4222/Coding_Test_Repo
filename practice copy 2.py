@@ -1,42 +1,62 @@
-n = int(input())
+yellow_melon = int(input())
 
-inner = []
-outer = []
+east = []
+west = []
+south = []
+north = []
 
-passing = 0
-
-
-
-for i in range(1, 2*n+1):
-    if i <= n:
-        inner_car = input()
-        inner.append(inner_car)
-
+for i in range(6):
+    direction, m = map(int,input().split())
+    if direction == 1:
+        west.append(m)
+    elif direction == 2:
+        north.append(m)
+    elif direction == 3:
+        south.append(m)
     else:
-        outer_car = input()
-        outer.append(outer_car)
-    
-    
-    
-o_idx= 0
-i_idx = 0
+        east.append(m)
 
-while True:
-    if outer[o_idx] != inner[0]:
-        o_idx += 1
-        passing += 1
-    else:
+# [50] [60, 100] [30, 20] [160] 동,서,남,북 순
+
+whole_num = east + west + south + north # [50, 60, 100, 30, 20, 160]
+
+whole = []
+
+whole.append(east)
+whole.append(west)
+whole.append(south)
+whole.append(north)
+
+top = max(whole_num)
+side = 0
+for k in range(len(whole)):
+    if len(whole[k]) == 1 and sum(whole[k]) != top:
+        side = whole[k][0]
         break
 
+whole_square = top * side
 
-compare = outer[o_idx:]
-for k in range(len(compare)):
-    if outer[o_idx] == inner[i_idx]:
-        o_idx += 1
-        i_idx += 1
-    else:
-        passing += 1
-        o_idx += 1
+part_square_top = 0
+part_square_side = 0
 
+for j in range(4):
+    if len(whole[j]) == 2 and sum(whole[j]) != top:
+        if whole[j][0] > whole[j][1]:
+            part_square_side = whole[j][1]
+        elif whole[j][0] < whole[j][1]:
+            part_square_side = whole[j][0]
+        else:
+            part_square_side = whole[j][0]
+    elif len(whole[j]) == 2 and sum(whole[j]) == top:
+        if whole[j][0] > whole[j][1]:
+            part_square_top = whole[j][1]
+        elif whole[j][0] < whole[j][1]:
+            part_square_top = whole[j][0]
+        else:
+            part_square_top = whole[j][0]
 
-print(passing)
+part_square = part_square_top * part_square_side
+
+result = (whole_square - part_square) * yellow_melon
+
+print(result)
