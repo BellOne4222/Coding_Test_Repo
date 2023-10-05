@@ -11,7 +11,36 @@ for i in range(n):
     
     docu, location = map(int,input().split()) # 문서 개수, 큐에서의 위치
     order = list(map(int,input().split())) # 중요도
-    printer = {j:0 for j in range(docu)}
+    order = deque(order)
+    my_order = 0
+    
+    while True:
+        m = max(order)
+        location -= 1
+        if order[0] == m:
+            printer = order.popleft()
+            my_order += 1
+            if location < 0:
+                print(my_order)
+                break
+        else:
+            order.rotate(-1)
+            if location < 0:
+                location = docu + location
+
+
+        
+
+
+
+
+
+
+
+            
+
+
+
     
 
 
