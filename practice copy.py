@@ -1,20 +1,15 @@
 n = int(input())
-building = 0
-
-heights = []
+towers = list(map(int, input().split()))
+stack = []
+answer = [0 for i in range(n)]
+ 
 for i in range(n):
-    x,y = map(int,input().split())
-    heights.append(y)
-heights.append(0)
-
-cnts = []
-cnts.append(0)
-for h in heights:
-    height = h
-    while cnts[-1] > h:
-        if cnts[-1] != height:
-            building += 1
-            height = cnts[-1]
-        cnts.pop()
-    cnts.append(h)   
-print(building)
+    while stack:
+        if stack[-1][1] > towers[i]:
+            answer[i] = stack[-1][0] + 1
+            break
+        else:
+            stack.pop()
+    stack.append([i, towers[i]])
+ 
+print(*answer)
