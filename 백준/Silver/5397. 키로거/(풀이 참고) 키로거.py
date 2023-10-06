@@ -1,4 +1,4 @@
-# 참고 : https://reliablecho-programming.tistory.com/102
+# 참고 : https://chancoding.tistory.com/49
 
 # 테스트 케이스의 개수를 입력받음
 t = int(input())
