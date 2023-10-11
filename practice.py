@@ -1,34 +1,22 @@
-from collections import deque
+import heapq
+import sys
+
+input = sys.stdin.readline()
+
+arr = []
+
+heapq.heapify(arr) # arr을 heapq로 변경
 
 n = int(input())
-sentence = deque()
-
 
 for _ in range(n):
-    cursor = 0
-    l = list(input())
-    for i in range(len(l)):
-
-        # 왼쪽 화살표
-        if l[i] == "<":
-            cursor -= 1
-            if cursor < 0:
-                cursor = 0
-        # 오른쪽 화살표
-        elif l[i] == ">":
-            cursor += 1
-            if cursor > len(sentence):
-                cursor = len(sentence)
-        # 백스페이스
-        elif l[i] == "-":
-            cursor -= 1
-            if sentence[cursor].isalnum():
-                sentence.pop()
-
-        # 대문자, 소문자, 숫자
+    x = int(input())  
+    # x가 0이 아니면 heappush
+    if x != 0: 
+        heapq.heappush(arr,(abs(x),x)) # 우선 순위, 값형식의 튜플로 저장
+    # x가 0이면 heappop
+    else:
+        if arr:
+            print(heapq.heappop(arr)[1])
         else:
-            sentence.insert(cursor, l[i])
-            cursor += 1
-    
-    sentence = list(sentence)
-    print(''.join(map(str,sentence)))
+            print(0)
