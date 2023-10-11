@@ -1,22 +1,34 @@
-# 참고 : https://reliablecho-programming.tistory.com/102
+from collections import deque
 
-t = int(input())
+n = int(input())
+sentence = deque()
 
-for _ in range(t):
-    l_list = []
-    r_list = []
-    data = input()
-    for i in data:
-        if i == '-':
-            if l_list: #왼쪽 스택에 있을 경우
-                l_list.pop()
-        elif i == '<': # 왼스택에 있는 문자 오른쪽 스택으로
-            if l_list:
-                r_list.append(l_list.pop())
-        elif i == '>': # 오스택에 있는 문자 왼쪽 스택으로
-            if r_list:
-                l_list.append(r_list.pop())
+
+for _ in range(n):
+    cursor = 0
+    l = list(input())
+    for i in range(len(l)):
+
+        # 왼쪽 화살표
+        if l[i] == "<":
+            cursor -= 1
+            if cursor < 0:
+                cursor = 0
+        # 오른쪽 화살표
+        elif l[i] == ">":
+            cursor += 1
+            if cursor > len(sentence):
+                cursor = len(sentence)
+        # 백스페이스
+        elif l[i] == "-":
+            cursor -= 1
+            if sentence[cursor].isalnum():
+                sentence.pop()
+
+        # 대문자, 소문자, 숫자
         else:
-            l_list.append(i)
-    l_list.extend(reversed(r_list)) # 오른쪽 스택에 있는 문자들은 뒤집어서 붙여야 한다.
-    print(''.join(l_list))
+            sentence.insert(cursor, l[i])
+            cursor += 1
+    
+    sentence = list(sentence)
+    print(''.join(map(str,sentence)))
