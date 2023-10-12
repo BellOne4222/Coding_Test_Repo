@@ -1,20 +1,15 @@
-import heapq
-import sys
+t = int(input())
 
-arr = []
+n = int(input())
 
-heapq.heapify(arr) # arr을 heapq로 변경
+diary_1 = list(map(int,input().split()))
 
-n = int(sys.stdin.readline())
+m = int(input())
 
-for _ in range(n):
-    x = int(sys.stdin.readline())  
-    # x가 0이 아니면 heappush
-    if x != 0: 
-        heapq.heappush(arr,(abs(x),x)) # 우선 순위, 값형식의 튜플로 저장
-    # x가 0이면 heappop
+diary_2 = list(map(int,input().split()))
+
+for i in range(m):
+    if diary_2[i] in diary_1:
+        print(1)
     else:
-        if arr:
-            print(heapq.heappop(arr)[1])
-        else:
-            print(0)
+        print(0)
