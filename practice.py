@@ -1,3 +1,17 @@
+# 반례 통과 못해서 keyerror
+# 입력:
+# 2
+# 1000 1
+# 2000 1
+# 4
+# recommend -1
+# solved 1000
+# add 1000 1000
+# recommend -1
+# 답:
+# 1000
+# 2000
+
 import sys
 
 n = int(sys.stdin.readline())
