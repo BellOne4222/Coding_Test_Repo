@@ -1,11 +1,18 @@
-import heapq
+items = [['hat', 'headgear'], ['sunglasses', 'eyewear'], ['turban', 'headgear']]
 
-arr = [12,7,9,15,5]
+# 빈 딕셔너리를 생성하여 headgear와 eyewear 항목을 그룹화합니다.
+grouped_items = {}
 
-heapq.heapify(arr)
+for item in items:
+    item_name, item_type = item
+    if item_type in grouped_items:
+        grouped_items[item_type].append(item_name)
+    else:
+        grouped_items[item_type] = [item_name]
 
-heapq.heappush(arr,13)
+# headgear와 eyewear 그룹을 추출합니다.
+headgear_items = grouped_items.get('headgear', [])
+eyewear_items = grouped_items.get('eyewear', [])
 
-heapq.heappop(arr)
-
-print(arr)
+print("Headgear:", headgear_items)
+print("Eyewear:", eyewear_items)
