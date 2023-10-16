@@ -7,7 +7,44 @@
 # 전체 고객의 대기시간 합?
 
 N = 2
-data = [[0, 3], [2, 5], [4, 2], [5, 3]]
+simulation_data = [[0, 3], [2, 5], [4, 2], [5, 3]]
 
-changgu = [[] for _ in range(N)]
-print(changgu)
+changgu = [] 
+
+wait = []
+timer = 0
+
+wait_time = 0
+
+all_time = simulation_data[-1][0] + simulation_data[-1][1] 
+
+idx = 0
+
+for i in range(all_time+1):
+    if wait:
+        timer += 1
+    if len(changgu) <= N and simulation_data[idx][0] == i:
+        changgu.append(simulation_data[idx])
+        idx += 1
+    elif len(changgu) > N and simulation_data[idx][0] == i:
+        wait.append(simulation_data[idx])
+    if changgu:
+        for j in range(len(changgu)):
+            if changgu[j][1] == i:
+                changgu.remove(changgu[j][1])
+                idx += 1
+    # if len(changgu) <= N and simulation_data[idx][0] == i:
+    #     if wait:
+    #         changgu.append(simulation_data[idx])
+    #         timer = 0 
+    #         wait.pop(0)
+    #     else:
+    #         changgu.append(simulation_data[idx])
+    #     idx += 1
+    # elif len(changgu) > N:
+    #     wait.append(simulation_data[idx][0])
+    # for j in range(len(changgu)):
+    #     if changgu[j][1] == i:
+    #         changgu.remove(changgu[j])
+
+    
