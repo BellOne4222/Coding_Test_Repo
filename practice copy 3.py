@@ -1,50 +1,26 @@
-# 1. 창구수 설정
-# 2. 고객 별로 대기 번호를 받은 시각과 상담에 걸리는 시간을 설정
-# 3. 생성된 데이터를 이용해 상담 처리 과정을 시뮬레이션
-# if len(상담창구) == 0: 즉시 상담
-# not 빈 창구 : wait
-# end 상담시간 -> 빈창구 +=1
-# 전체 고객의 대기시간 합?
+enter = set()  # 입장 학회원 집합
+bye = set()    # 퇴장 학회원 집합
 
-N = 2
-simulation_data = [[0, 3], [2, 5], [4, 2], [5, 3]]
+o_start, o_finish, s_finish = input().split()
+o_s_clock, o_s_minute = map(int, o_start.split(":"))
+o_f_clock, o_f_minute = map(int, o_finish.split(":"))
+s_f_clock, s_f_minute = map(int, s_finish.split(":"))
 
-changgu = [] 
+while True:
+    try:
+        chatting = input()
+        time, person = chatting.split()
+        clock, minute = map(int, time.split(":"))
 
-wait = []
-timer = 0
+        if clock < o_s_clock or (clock == o_s_clock and minute <= o_s_minute):
+            enter.add(person)
+        elif o_f_clock <= clock < s_f_clock:
+            if o_f_minute <= minute < 60:
+                bye.add(person)
+        elif clock == s_f_clock and minute <= s_f_minute:
+            bye.add(person)
+    except:
+        break
 
-wait_time = 0
-
-all_time = simulation_data[-1][0] + simulation_data[-1][1] 
-
-idx = 0
-
-for i in range(all_time+1):
-    if wait:
-        timer += 1
-    if len(changgu) <= N and simulation_data[idx][0] == i:
-        changgu.append(simulation_data[idx])
-        idx += 1
-    elif len(changgu) > N and simulation_data[idx][0] == i:
-        wait.append(simulation_data[idx])
-    if changgu:
-        for j in range(len(changgu)):
-            if changgu[j][1] == i:
-                changgu.remove(changgu[j][1])
-                idx += 1
-    # if len(changgu) <= N and simulation_data[idx][0] == i:
-    #     if wait:
-    #         changgu.append(simulation_data[idx])
-    #         timer = 0 
-    #         wait.pop(0)
-    #     else:
-    #         changgu.append(simulation_data[idx])
-    #     idx += 1
-    # elif len(changgu) > N:
-    #     wait.append(simulation_data[idx][0])
-    # for j in range(len(changgu)):
-    #     if changgu[j][1] == i:
-    #         changgu.remove(changgu[j])
-
-    
+result = len(enter.intersection(bye))
+print(result)
