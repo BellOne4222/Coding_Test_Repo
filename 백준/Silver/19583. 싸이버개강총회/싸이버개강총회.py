@@ -20,12 +20,11 @@ while True:
 
         if time <= o_s:
             enter.add(person)
-        elif o_f <= time <= s_f and person in enter:
-            # if person in enter:
-            enter.remove(person)
-            result += 1
+        elif o_f <= time <= s_f:
+            if person in enter:
+                enter.remove(person)
+                result += 1
     except:
         break
-
 
 print(result)
