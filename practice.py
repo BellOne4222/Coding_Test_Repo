@@ -1,22 +1,39 @@
-# 1.
+import sys
+import heapq
 
-def solution(books, target):
-    power = 0 # 들인 힘을 받는 변수
+n = int(sys.stdin.readline().rstrip())
+cards = []
+heapq.heapify(cards)
+result = 0
 
-    for i in range(len(target)):
-        book = target[i]
-        find = 0
-        idx = 0
-        while True:
-            if books[idx] == book:
-                books.insert(0, carry)
-                carry = books.remove(books[idx])
-                power += find
-                break
-            else:
-                idx += 1
-                find += 1
+
+for i in range(n): # [10, 20, 40]
+    card = int(sys.stdin.readline().rstrip())
+    heapq.heappush(cards,card)
+
+flag = False
+while len(cards) != 1:
+    mixing = 0
+    if not flag:
+        for j in range(2):
+            a = heapq.heappop(cards)
+            mixing += a
+        flag = True
+    else:
+        a = heapq.heappop(cards)
+        b = heapq.heappop(cards)
+        mixing += (a+b)
     
-    return power
+    result += mixing
+    heapq.heappush(cards, mixing)
+        
 
-print(solution([3,1,2],[1,3,2]))
+
+
+
+print(result)
+
+
+
+
+
