@@ -1,49 +1,22 @@
-# 개강총회를 시작하기 전에, 학회원의 입장 확인 여부를 확인한다. 학회원의 입장 여부는 개강총회가 시작한 시간 이전에 대화를 한 적이 있는 학회원의 닉네임을 보고 체크한다. 
-# 개강총회를 시작하자마자 채팅 기록을 남긴 학회원도 제 시간에 입장이 확인된 것으로 간주한다.
-
-# 개강총회를 끝내고 나서, 스트리밍을 끝낼 때까지 학회원의 퇴장 확인 여부를 확인한다. 학회원의 퇴장 여부는 개강총회가 끝나고 스트리밍이 끝날 때까지 대화를 한 적이 있는 
-# 학회원의 닉네임을 보고 체크한다. 개강총회가 끝나자마자 채팅 기록을 남겼거나, 
-# 개강총회 스트리밍이 끝나자마자 채팅 기록을 남긴 학회원도 제 시간에 퇴장이 확인된 것으로 간주한다.  
-
-# 단, 00:00부터는 개강총회를 시작하기 전의 대기 시간이며, 개강총회 스트리밍 끝난 시간 이후로 남겨져 있는 채팅 기록은 다른 스트리밍 영상의 채팅 기록으로 간주한다.
 import sys
-enter = set() # 입장 배열
-bye = set() # 퇴장 배열
+import heapq
+n = int(sys.stdin.readline())
+missions = [] # [[3, 2, 14], [1, 3, 8], [5, 6, 20], [8, 6, 27], [2, 7, 13], [4, 12, 18], [6, 15, 21], [7, 20, 25]]
 
-o_start, o_finish, s_finish = input().split()
-o_s_clock, o_s_minute = map(int, o_start.split(":"))
-o_f_clock, o_f_minute = map(int, o_finish.split(":"))
-s_f_clock, s_f_minute = map(int, s_finish.split(":"))
+room = 1
 
-f_clock = [i for i in range(o_f_clock,s_f_clock+1)]
-f_minute_1 = [i for i in range(o_f_minute,60)]
-f_minute_1 = [i for i in range(0,s_f_minute+1)]
+for i in range(n):
+    mission = list(map(int, sys.stdin.readline().split()))
+    missions.append(mission)
 
-while True:
-    chatting = input()
-    if chatting == "":
-        break
-    else:
-        time, person = chatting.split()
-        clock, minuite = map(int, time.split(":"))
+missions = sorted(missions, key=lambda x:(x[1],x[2]))
 
-        # 개강총회를 시작하자마자 채팅 기록을 남긴 학회원도 제 시간에 입장이 확인된 것으로 간주한다.
-        if clock < o_s_clock or clock == o_s_clock and 0 <= minuite <= o_s_minute:
-            enter.add(person)
-        # 개강총회를 끝내고 나서, 스트리밍을 끝낼 때까지 학회원의 퇴장 확인 여부를 확인한다. 학회원의 퇴장 여부는 개강총회가 끝나고 스트리밍이 끝날 때까지 대화를 한 적이 있는 
-        # 학회원의 닉네임을 보고 체크한다. 개강총회가 끝나자마자 채팅 기록을 남겼거나, 
-        # 개강총회 스트리밍이 끝나자마자 채팅 기록을 남긴 학회원도 제 시간에 퇴장이 확인된 것으로 간주한다.  
-        elif o_f_clock <= clock < s_f_clock:
-            if o_f_minute <= minuite < 60:
-                bye.add(person)
-        elif clock == s_f_clock:
-            if minuite <= s_f_minute:
-                bye.add(person)
+finish_time = []
+heapq.heapify(finish_time)
 
-result = 0
-for person in enter:
-    if person in bye:
-        result += 1
+for i in range(len(missions)):
+    heapq.heappush(finish_time, (missions[i][2],missions[i][1]))
+    print(finish_time)
 
-print(result)
+print(finish_time)
 
