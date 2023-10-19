@@ -23,5 +23,5 @@ for i in range(1,len(missions)):
         heapq.heappush(finish_time, (missions[i][2],missions[i][1]))
     
 
-print(finish_time)
+print(len(finish_time))
 
