@@ -13,10 +13,15 @@ missions = sorted(missions, key=lambda x:(x[1],x[2]))
 
 finish_time = []
 heapq.heapify(finish_time)
+heapq.heappush(finish_time, (missions[0][2],missions[0][1]))
 
-for i in range(len(missions)):
-    heapq.heappush(finish_time, (missions[i][2],missions[i][1]))
-    print(finish_time)
+for i in range(1,len(missions)):
+    if finish_time[0][0] > missions[i][1]:
+        heapq.heappush(finish_time, (missions[i][2],missions[i][1]))
+    else:
+        heapq.heappop(finish_time)
+        heapq.heappush(finish_time, (missions[i][2],missions[i][1]))
+    
 
 print(finish_time)
 
