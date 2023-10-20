@@ -1,41 +1,30 @@
 import sys
-from collections import deque
-import itertools
+import heapq
 
-n = int(sys.stdin.readline().rstrip())
+n, m = map(int, sys.stdin.readline().rstrip().split())
 
-nums = list(map(int,sys.stdin.readline().split()))
-nums = sorted(nums)
+answer = []
+graph = [[] for _ in range(n + 1)]
+inDegree = [0 for _ in range(n+1)]
+queue = []
 
-good = 0
+
+for i in range(m):
+    first, second = map(int, sys.stdin.readline().rstrip().split())
+    graph[first].append(second)
+    inDegree[second] += 1
+
+for i in range(1, n + 1):
+    if inDegree[i] == 0:
+        heapq.heappush(queue, i)
+
+while queue:
+    tmp = heapq.heappop(queue)
+    answer.append(tmp)
+    for i in graph[tmp]:
+        inDegree[i] -= 1
+        if inDegree[i] == 0:
+            heapq.heappush(queue, i)
 
 
-nums = deque(nums)
-
-cnt = 1
-parts = []
-candidations = []
-sums = []
-
-while True:
-    if cnt > n:
-        break
-    parts = []
-    compare = nums.popleft()
-    part = sum(1 for item in nums if compare > item)
-    if part >= 2:
-        for i in nums:
-            if compare > i:
-                parts.append(i)
-        candidations = list(itertools.combinations(parts,2))
-        for j in range(len(candidations)):
-            s = candidations[j][0] + candidations[j][1]
-            if s == compare:
-                good += 1
-                break
-        nums.append(compare)
-    else:
-        nums.append(compare)
-    
-
-print(good)
+print(" ".join(map(str, answer)))
