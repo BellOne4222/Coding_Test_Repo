@@ -33,6 +33,9 @@ while True:
             if s == compare:
                 good += 1
                 break
+        nums.append(compare)
+    else:
+        nums.append(compare)
     
 
 print(good)
