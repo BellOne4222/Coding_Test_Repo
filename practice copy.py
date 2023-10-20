@@ -1,27 +1,38 @@
 import sys
-import heapq
-n = int(sys.stdin.readline())
-missions = [] # [[3, 2, 14], [1, 3, 8], [5, 6, 20], [8, 6, 27], [2, 7, 13], [4, 12, 18], [6, 15, 21], [7, 20, 25]]
+from collections import deque
+import itertools
 
-room = 1
+n = int(sys.stdin.readline().rstrip())
 
-for i in range(n):
-    mission = list(map(int, sys.stdin.readline().split()))
-    missions.append(mission)
+nums = list(map(int,sys.stdin.readline().split()))
+nums = sorted(nums)
 
-missions = sorted(missions, key=lambda x:(x[1],x[2]))
+good = 0
 
-finish_time = []
-heapq.heapify(finish_time)
-heapq.heappush(finish_time, (missions[0][2],missions[0][1]))
 
-for i in range(1,len(missions)):
-    if finish_time[0][0] > missions[i][1]:
-        heapq.heappush(finish_time, (missions[i][2],missions[i][1]))
-    else:
-        heapq.heappop(finish_time)
-        heapq.heappush(finish_time, (missions[i][2],missions[i][1]))
+nums = deque(nums)
+
+cnt = 1
+parts = []
+candidations = []
+sums = []
+
+while True:
+    if cnt > n:
+        break
+    parts = []
+    compare = nums.popleft()
+    part = sum(1 for item in nums if compare > item)
+    if part >= 2:
+        for i in nums:
+            if compare > i:
+                parts.append(i)
+        candidations = list(itertools.combinations(parts,2))
+        for j in range(len(candidations)):
+            s = candidations[j][0] + candidations[j][1]
+            if s == compare:
+                good += 1
+                break
     
 
-print(len(finish_time))
-
+print(good)
