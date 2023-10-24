@@ -9,5 +9,5 @@ rng = n // m
 left = blueray[:rng]
 mid = blueray[rng:(n-rng)]
 right = blueray[(n-rng):]
+# [1, 2, 3] [4, 5, 6] [7, 8, 9]
 
-print(left, mid, right)
