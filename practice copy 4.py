@@ -1,27 +1,25 @@
 import sys
 
-k,n = map(int,sys.stdin.readline().split())
+n = int(sys.stdin.readline().rstrip())
 
-cables = []
-for _ in range(k):
-    cable = int(sys.stdin.readline().rstrip())
-    cables.append(cable)
+m = int(sys.stdin.readline().rstrip())
 
-cables = sorted(cables) # [457, 539, 743, 802]
+lst = list(map(int, sys.stdin.readline().split()))
 
-nCable = 1
-mCable = max(cables)
+lst = sorted(lst) # [1, 2, 3, 4, 5, 7]
 
-while nCable <= mCable:
-    dCable = (mCable + nCable) // 2
-    cableCnt = 0
+left = 0
+right = len(lst) - 1
+result = 0
 
-    for i in range(len(cables)):
-        cableCnt += cables[i] // dCable 
-    
-    if cableCnt < n:
-        mCable = dCable -1
-    elif cableCnt >= n:
-        nCable = dCable + 1
+while left < right:
+    combine = lst[left] + lst[right]
+    if combine == m:
+        result += 1
+        left += 1
+    elif combine > m:
+        right -= 1
+    else:
+        left += 1
 
-print(mCable)
+print(result)
