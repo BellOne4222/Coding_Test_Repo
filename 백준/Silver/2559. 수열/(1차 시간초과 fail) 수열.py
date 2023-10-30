@@ -1,3 +1,5 @@
+# 시간 복잡도 : O(N^2)
+
 import sys
 
 n,k = map(int,sys.stdin.readline().split(" "))
