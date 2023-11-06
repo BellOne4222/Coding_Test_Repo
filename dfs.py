@@ -1,5 +1,4 @@
 import sys
-from collections import deque
 
 # DFS 함수를 정의합니다. 이 함수는 시작 지점에서 블록을 탐색하고, 그 블록의 크기를 반환합니다.
 def dfs(x, y):
