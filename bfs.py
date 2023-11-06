@@ -28,6 +28,7 @@ def bfs(y, x):
 
 n = int(sys.stdin.readline())  # 정사각형 모양의 지도의 크기 입력
 
+
 blockMap = [list(map(int, input())) for _ in range(n)]  # 지도 정보 입력
 
 visited = [[False] * n for _ in range(n)]  # 방문 여부를 나타내는 배열 초기화
