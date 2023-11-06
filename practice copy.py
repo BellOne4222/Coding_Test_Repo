@@ -1,12 +1,12 @@
-# def Betal(fck):
-#     if fck <= 28.0:
-#         betal = 0.85
-#     elif fck > 28.0:
-#         betal = 0.85 - 0.007 * (fck - 28.0)
+def Betal(fck):
+    if fck <= 28.0:
+        betal = 0.85
+    elif fck > 28.0:
+        betal = 0.85 - 0.007 * (fck - 28.0)
         
-#     if betal < 0.65:
-#         betal = 0.65
-#     return betal
+    if betal < 0.65:
+        betal = 0.65
+    return betal
       
 
 # Strength Reduction Factor, et
@@ -48,7 +48,7 @@ def Dbeam(fy, fck, b, d, dt, As, Asp, dp) :
 
    et = 0.0033 * ( dt-c ) / c
    if et < 0.004:
-      Mn = 0
+      Mn = 0.0
    
    phi = Strength_Reduction_Factor(et)
 
@@ -62,12 +62,25 @@ def Dbeam(fy, fck, b, d, dt, As, Asp, dp) :
    yt = h /2
    Mcr = fr * Ig / yt * 1E-6
    if pMn < 1.2 * Mcr:
-      Mn = pMn = 0
+      Mn = pMn = 0.0
 
    # return analysis results
    return pMn, Mn, phi ,et, c, a   
 
-#예제 4-2
-fy, fck, b, d, dt, As, Asp, dp=  400, 24, 300, 515, 540, 60, 387.1 * 8, 387.1 *2
-pMn, Mn, phi, et, c, a = Dbeam(fy, fck, b, d, dt, As, Asp, dp)
-print(f'[Dbeam] a={a:6.1f} mm, c={c:6.1f}mm,et={et: 7.4f},Mn={Mn:6.1f}kN.m, phi={phi: 6.3f},pMn={pMn:6.1f}kN.m')
+D22 = 387.1
+D25 = 566.7
+D29 = 642.6
+
+D1 = [400, 24, 400, 515, 540, 8*D25, 2*D22, 60]
+D2 = [400, 27, 400, 710, 740, 8*D22, 2*D22, 60]
+D3 = [300, 21, 400, 515, 540, 8*D22, 2*D22, 60]
+D4_2 = [400, 21, 300, 515, 540, 387.1*8, 387.1*2, 60]
+D4_3 = [400, 21 ,300, 515, 540, 387.1*8, 387.1*4,60]
+
+Dlist = [D1,D2,D3,D4_2,D4_3]
+
+for i in range(len(Dlist)):
+   fy, fck, b, d, dt, As, Asp, dp = Dlist[i][0], Dlist[i][1], Dlist[i][2], Dlist[i][3], Dlist[i][4], Dlist[i][5], Dlist[i][6], Dlist[i][7]
+   pMn, Mn, phi, et, c, a = Dbeam(fy, fck, b, d, dt, As, Asp, dp)
+   print(f'[Dbeam] a={a:6.1f} mm, c={c:6.1f}mm,et={et: 7.4f},Mn={Mn:6.1f}kN.m, phi={phi: 6.3f},pMn={pMn:6.1f}kN.m')
+
