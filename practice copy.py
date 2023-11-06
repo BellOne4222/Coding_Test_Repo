@@ -1,12 +1,12 @@
-def Betal(fck):
-    if fck <= 28.0:
-        betal = 0.85
-    elif fck > 28.0:
-        betal = 0.85 - 0.007 * (fck - 28.0)
+# def Betal(fck):
+#     if fck <= 28.0:
+#         betal = 0.85
+#     elif fck > 28.0:
+#         betal = 0.85 - 0.007 * (fck - 28.0)
         
-    if betal < 0.65:
-        betal = 0.65
-    return betal
+#     if betal < 0.65:
+#         betal = 0.65
+#     return betal
       
 
 # Strength Reduction Factor, et
