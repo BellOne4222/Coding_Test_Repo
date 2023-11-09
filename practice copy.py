@@ -1,86 +1,20 @@
-def Betal(fck):
-    if fck <= 28.0:
-        betal = 0.85
-    elif fck > 28.0:
-        betal = 0.85 - 0.007 * (fck - 28.0)
-        
-    if betal < 0.65:
-        betal = 0.65
-    return betal
-      
+# 참고 : https://jiwon-coding.tistory.com/21
 
-# Strength Reduction Factor, et
-def Strength_Reduction_Factor(et):
-   if et >= 0.005 :
-      phi = 0.85
-   elif et < 0.002 :
-      phi = 0.65
-   else :
-      phi = 0.65 +( et - 0.002 ) * ( 0.2 / 0.003 )
-   return phi
+import sys
 
+n,m = map(int, sys.stdin.readline().split())
+result = [] # 재귀함수를 이용하여 m개의 수열을 저장하기 위한 리스트
+visited = [False * (n+1)]
 
-
-def Dbeam(fy, fck, b, d, dt, As, Asp, dp) :
-   #design flexura1 strength of singly reinforced concrete beam (MPa,mm) 
-
-   #return (pMn, Mn, phi, et, c, a)
-
-   # nominal flexural strength
+def dfs():
+   if len(result) == m: # 리스트에 들어간 수열들이 m개가 되면 리스트에 들어있는 숫자들을 모두 출력하고 함수를 나온다.
+      print(' '.join(map(str,result)))
+      return
    
-   a = ( As - Asp ) * fy / (0.85 * fck * b)
-   # assumtions : fck <= 40mpa
-   b1 = 0.8
-   c = a / b1
-   Es = 0.0033 * ( c - dp ) / c
+   for i in range(1,n+1): #  for문을 이용하여 1부터 n까지의 숫자들을 모두 확인
+      if i not in result: # 리스트 s 중복여부 확인
+         result.append(i) # 중복이 아니면 숫자 i를 리스트 s에 넣기
+         dfs() # 현재 s=[1]인 상태에서 다음숫자를 넣기위하여 가지치기하기(재귀함수)
+         result.pop() #   s : [1] -> [1,2] -> [1] -> [1,3] -> [1] -> [1,4] 출력   pop(2)  출력   pop(3)  출력
 
-   if Es > 0.002:
-      Mn = ( Asp * fy * ( d - dp ) + ( As - Asp ) * fy * ( d - a/2)) * 1E-6 
-   else:
-      x = 0.85 * fck * b
-      y = 0.0033 * 200000 * Asp - As * fy
-      z = -0.0033 * 200000 * Asp * b1 * dp
-      a = (-y+(y**2 - 4 * x  * z)**0.5) / (2 * x)
-      fs = Es * 200000
-      Mn = ( 0.85 * fck * a * b *(d-a/2) + Asp * fs * (d- a/2) ) * 1E-6
-
-    # check the extreme tensile strain(=et)
-
-   et = 0.0033 * ( dt-c ) / c
-   if et < 0.004:
-      Mn = 0.0
-   
-   phi = Strength_Reduction_Factor(et)
-
-   # design strength
-   pMn = phi * Mn
-
-   #check minimum reinforcement
-   fr = 0.63 * (fck**0.5)
-   h = dt + 60
-   Ig = b * h**3 / 12
-   yt = h /2
-   Mcr = fr * Ig / yt * 1E-6
-   if pMn < 1.2 * Mcr:
-      Mn = pMn = 0.0
-
-   # return analysis results
-   return pMn, Mn, phi ,et, c, a   
-
-D22 = 387.1
-D25 = 566.7
-D29 = 642.6
-
-D1 = [400, 24, 400, 515, 540, 8*D25, 2*D22, 60]
-D2 = [400, 27, 400, 710, 740, 8*D22, 2*D22, 60]
-D3 = [300, 21, 400, 515, 540, 8*D22, 2*D22, 60]
-D4_2 = [400, 21, 300, 515, 540, 387.1*8, 387.1*2, 60]
-D4_3 = [400, 21 ,300, 515, 540, 387.1*8, 387.1*4,60]
-
-Dlist = [D1,D2,D3,D4_2,D4_3]
-
-for i in range(len(Dlist)):
-   fy, fck, b, d, dt, As, Asp, dp = Dlist[i][0], Dlist[i][1], Dlist[i][2], Dlist[i][3], Dlist[i][4], Dlist[i][5], Dlist[i][6], Dlist[i][7]
-   pMn, Mn, phi, et, c, a = Dbeam(fy, fck, b, d, dt, As, Asp, dp)
-   print(f'[Dbeam] a={a:6.1f} mm, c={c:6.1f}mm,et={et: 7.4f},Mn={Mn:6.1f}kN.m, phi={phi: 6.3f},pMn={pMn:6.1f}kN.m')
-
+dfs()
