@@ -14,6 +14,7 @@ def dfs(depth):
     
     # 각 자연수에 대해 선택 여부 확인
     for i in range(n):
+        # 이미 선택된 자연수는 건너뛰기
         if numbers[i] in result:
             continue
         
