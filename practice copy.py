@@ -1,7 +1,14 @@
-import sys
+n, m = map(int, input().split())
+nums = sorted(list(map(int, input().split())))
+temp = []
 
-n,m = map(int,sys.stdin.readline().split())
+def dfs():
+    if len(temp) == m:
+        print(*temp)
+        return
+    for i in range(n):
+            temp.append(nums[i])
+            dfs()
+            temp.pop()
 
-numbers = list(map(int,sys.stdin.readline().split(" ")))
-
-print(n,m,numbers)
+dfs()
