@@ -2,6 +2,6 @@ import sys
 
 n,m = map(int,sys.stdin.readline().split())
 
-board = [list(sys.stdin.readline().rstrip()) for _ in range(n)]
+numbers = list(map(int,sys.stdin.readline().split(" ")))
 
-print(board)
+print(n,m,numbers)
