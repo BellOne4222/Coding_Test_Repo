@@ -16,7 +16,7 @@ while True:
     # 이미 나온 값이라면 반복을 멈춥니다.
     if compare in non_duplicate:
         break
-    non_duplicate.append(compare)  # 중복되지 않은 값이면 리스트에 추가합니다.
+    non_duplicate.append(compare)  # 중복되지 않은 값이면S 리스트에 추가합니다.
 
 # 반복되는 부분을 제외하고 남는 수들의 개수를 출력합니다.
 print(non_duplicate.index(compare))
