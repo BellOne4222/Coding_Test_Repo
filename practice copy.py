@@ -1,25 +1,18 @@
 import sys
-from collections import deque
 
-def bfs(s,t,kick):
-    q = deque()
-    q.append((s,t,kick))
+a, p = map(int,sys.stdin.readline().split())
+
+non_duplicate = []
+
+non_duplicate.append(a)
+
+while True:
+    duplicate = str(non_duplicate[-1])
+    compare = 0
+    for i in duplicate:
+        compare += int(i) ** p
+    if compare in non_duplicate:
+        break
+    non_duplicate.append(compare)
     
-    while q:
-        me, opponent, kicks = q.popleft()
-        
-        if me <= opponent:
-            q.append((me*2,opponent+3,kicks+1))
-            q.append((me+1,opponent,kicks+1))
-            
-            if me == opponent:
-                return kicks 
-    
-
-c = int(sys.stdin.readline())
-
-for _ in range(c):
-    kick = 0
-    s,t = map(int, sys.stdin.readline().split())
-    print(bfs(s,t,kick))
-
+print(non_duplicate.index(compare))
