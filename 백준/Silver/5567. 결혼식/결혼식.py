@@ -29,16 +29,16 @@ def bfs(vertex):
     print(len(invite) - 1)  # 상근이 자신을 빼고 출력합니다.
             
         
-n = int(sys.stdin.readline())
-m = int(sys.stdin.readline())
+n = int(sys.stdin.readline())  # 상근이의 동기 수를 입력 받습니다.
+m = int(sys.stdin.readline())  # 친구 관계의 수를 입력 받습니다.
 
-graph = [[] for _ in range(n+1)]
+graph = [[] for _ in range(n+1)]  # 각 학생별 친구 리스트를 만듭니다.
 
 for _ in range(m):
     start, end = map(int, sys.stdin.readline().split())
     graph[start].append(end)
-    graph[end].append(start)
+    graph[end].append(start)  # 서로 친구이므로 양방향으로 추가합니다.
 
-visited = [False] * (n+1)
+visited = [False] * (n+1)  # 방문 여부를 체크하기 위한 리스트를 만듭니다.
 
-bfs(1)
+bfs(1)  # 상근이(학생 1)을 시작으로 BFS를 실행하여 초대할 동기 수를 찾습니다.
