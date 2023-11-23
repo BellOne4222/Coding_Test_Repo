@@ -1,38 +1,34 @@
-from collections import deque
 import sys
-input = sys.stdin.readline
+from collections import deque
 
-# 입력
-n, m = map(int, input().split())
-graph = []
-for _ in range(n):
-    graph.append(list(map(int, input().split())))
+dx = [-1, -1, -1, 0, 1, 0, 1, 1]
+dy = [-1, 0, 1, 1, 1, -1, 0, -1]
 
+# 입력 받기
+n, m = map(int, sys.stdin.readline().split())
+graph = [list(map(int, sys.stdin.readline().split())) for _ in range(n)]
 
-# bfs
-direction = [(1,0), (0,1), (-1,0), (0,-1)]
-
-def bfs(x, y):
-    graph[x][y] = 0
-    queue = deque([(x, y)]) # 시작지점
-    size = 1 # 집 크기
-    while queue:
-        x, y = queue.popleft()
-        for dx, dy in direction:
-            nx, ny = x+dx, y+dy
-            # 범위 내 방문하지 않은 곳이면 탐색
-            if 0 <= nx < n and 0 <= ny < m and graph[nx][ny] == 1:
-                graph[nx][ny] = 0
-                size += 1
-                queue.append((nx, ny))
-    return size
-
-cnt = 0
-max_size = 0
+# 상어 위치 찾기
+queue = deque()
 for i in range(n):
     for j in range(m):
-        if graph[i][j] == 1:
-            cnt += 1
-            max_size = max(max_size, bfs(i, j))
-print(cnt)
-print(max_size)
+        if graph[i][j] == 1:  
+            queue.append([i, j])
+
+result = 0
+# BFS를 통해 안전 거리 구하기 
+while queue:
+    x, y = queue.popleft()
+    for i in range(8):
+        nx = x + dx[i]
+        ny = y + dy[i]
+        if nx < 0 or ny < 0 or nx >= n or ny >= m:
+            continue
+        if graph[nx][ny] != 0:
+            continue
+        queue.append([nx, ny])
+        graph[nx][ny] = graph[x][y] + 1
+        result = max(result, graph[x][y] + 1)
+
+# 안전 거리의 최댓값 출력하기 (시작 위치를 포함한 거리를 출력)
+print(result - 1) # 상어의 위치를 제외하고 결과 출력
