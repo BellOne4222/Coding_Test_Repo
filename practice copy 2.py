@@ -1,32 +1,62 @@
+from collections import deque
 import sys
 
-n,m = map(int,sys.stdin.readline().split())
-
-grid = [[0 for _ in range(m+1)] for _ in range(n+1)]
-
-case = 0 # 첫 번째 줄에 주어진 격자판에서 나올 수 있는, “넴모”들이 올라간 칸이 2 × 2 사각형을 이루지 않는 모든 배치의 가짓수
-
-def dfs(x, y):
-    global case
-    # 종료 조건
-    if (x, y) == (1, n + 1):
-        case += 1
-        return
+def bfs(x,y):
+    dx = [1,-1,0,0]
+    dy = [0,0,1,-1]
     
-    if x == m:
-        nx, ny = 1, y + 1
-    else:
-        nx, ny = x + 1, y
-        
-    # x, y에 네모를 놓지 않은 경우
-    dfs(nx, ny)
+    sheep_cnt, wolf_cnt = 0,0
     
-    # x, y에 네모를 놓을 수 있고 놓는 경우
-    if grid[y - 1][x] == 0 or grid[y - 1][x - 1] == 0 or grid[y][x - 1] == 0:
-        grid[y][x] = 1
-        dfs(nx, ny)
-        grid[y][x] = 0
+    if yard[x][y] == "o":
+        sheep_cnt += 1
+    
+    if yard[x][y] == "v":
+        wolf_cnt += 1
+    
+    queue = deque()
+    queue.append([x,y])
+    visited[x][y] = True
+    
+    while queue:
+        cur_x, cur_y = queue.popleft()
         
-dfs(1, 1)
+        for i in range(4):
+            nx = cur_x + dx[i]
+            ny = cur_y + dy[i]
+            
+            if 0 <= nx < c and 0 <= ny < r:
+                visited[nx][ny] = True
+                queue.append([nx,ny])
+                
+                if yard[nx][ny] == "o":
+                    sheep_cnt += 1
+    
+                if yard[nx][ny] == "v":
+                    wolf_cnt += 1
+    
+    return sheep_cnt, wolf_cnt
+    
+r,c = map(int, sys.stdin.readline().split())
 
-print(case)
+yard = [list(map(str, sys.stdin.readline().rstrip())) for _ in range(r)] 
+# [['.', '.', '.', '#', '.', '.', '\n'], ['.', '#', '#', 'v', '#', '.', '\n'], ['#', 'v', '.', '#', '.', '#', '\n'], ['#', '.', 'o', '#', '.', '#', '\n'], ['.', '#', '#', '#', '.', '#', '\n'], ['.', '.', '.', '#', '#', '#', '\n']]
+
+visited = [[False for _ in range(r)] for _ in range(c)]
+
+living_sheep_cnt = 0
+living_wolf_cnt = 0
+
+for i in range(c):
+    for j in range(r):
+        if yard[c][r] != "#" and not visited[c][r]:
+            sheep_cnt, wolf_cnt = bfs(c,r)
+            
+            if sheep_cnt > wolf_cnt:
+                wolf_cnt = 0
+            else:
+                sheep_cnt = 0
+            
+            living_sheep_cnt += sheep_cnt
+            living_wolf_cnt += wolf_cnt
+
+print("{} {}".format(living_sheep_cnt, living_wolf_cnt))
