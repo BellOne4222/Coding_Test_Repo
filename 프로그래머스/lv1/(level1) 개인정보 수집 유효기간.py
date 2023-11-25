@@ -24,3 +24,64 @@ def solution(today, terms, privacies):
         
     
     return result
+
+# def solution(today, terms, privacies):
+    
+#     cal_today = list(today.split("."))
+#     cal_today = ''.join(cal_today)
+    
+#     term_dict = {} # {'A': 6, 'B': 12, 'C': 3}
+    
+#     for i in range(len(terms)):
+#         term_name, term = terms[i].split(" ")
+#         term_dict[term_name] = int(term)
+        
+#     result = []
+    
+#     for j in range(len(privacies)):
+#         deadline, term_name = privacies[j].split(" ")
+        
+#         deadline_lst = list(map(int,deadline.split(".")))
+        
+#         cal_m = deadline_lst[1] + term_dict[term_name]
+        
+#         if cal_m > 12:
+#             cal_y = deadline_lst[0] + 1
+#             deadline_lst[0] = cal_y
+#             cal_m -= 12
+        
+#         cal_d = deadline_lst[2] - 1
+#         if cal_d == 0:
+#             cal_d = 28
+#             cal_m -= 1
+        
+#         deadline_lst[1] = cal_m
+#         deadline_lst[2] = cal_d
+        
+        
+        
+#         compare = ''
+#         for k in range(len(deadline_lst)):
+            
+#             into = str(deadline_lst[k])
+#             if len(into) == 1:
+#                 zero_compare = '0'
+#                 zero_compare += into
+#                 compare += zero_compare
+#             else:
+#                 compare += into
+        
+#         if int(cal_today) > int(compare):
+#             result.append(j+1)
+        
+#     return result
+            
+        
+        
+        
+        
+        
+        
+            
+        
+        
