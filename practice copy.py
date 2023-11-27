@@ -1,23 +1,39 @@
-my_cards = [3, 6, 7, 2]
-target = 13
-need_card_lst = []
-my_cards.sort()
-need_1 = 0
-need_2 = 0
-left = 0
-right = len(my_cards) - 1 
-while True:
-    if my_cards[left] + my_cards[right] > target:
-        need_card_lst.append(target - my_cards[left])
-        right += 1
-    elif my_cards[left] + my_cards[right] < target:
-        left += 1
-        need_card_lst.append(target - my_cards[left])
-    elif my_cards[left] + my_cards[right] == target:
-        flag = True
-        need_1, need_2 = my_cards[left], my_cards[right]
-        break
-    flag = False
+import sys  # sys 모듈을 불러옵니다.
 
-print(need_card_lst)
+n = int(sys.stdin.readline())
 
+meetings = []
+
+for _ in range(n):
+    meeting = list(map(int, sys.stdin.readline().split()))
+    meetings.append(meeting)
+
+standard = meetings[-1][0]
+
+dp_table = [0] * (standard+1)
+
+for i in reversed(range(len(meetings))):
+    start, end, person = meetings[i][0], meetings[i][1], meetings[i][2]
+    
+    dp_table[start] += person
+    
+    idx = meetings.index(meetings[i])
+    compare_lst = []
+    for j in range(idx, len(meetings)):
+        if meetings[j][0] >= end:
+            if dp_table[start] < dp_table[start] + dp_table[meetings[j][0]]:
+                compare_lst.append(dp_table[start] + dp_table[meetings[j][0]])
+    if compare_lst:
+        dp_table[start] = max(compare_lst)
+
+print(max(dp_table))
+            
+        
+        
+        
+        
+        
+            
+            
+        
+    
