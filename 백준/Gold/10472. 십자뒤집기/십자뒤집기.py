@@ -1,55 +1,53 @@
-SIZE = 3
-BLACK = '*'
-WHITE = '.'
-DY = [0, -1, 0, 1, 0]
-DX = [0, 0, 1, 0, -1]
+size = 3
+black = '*'
+white = '.'
+dy = [0, -1, 0, 1, 0]
+dx = [0, 0, 1, 0, -1]
 INF = 987654321
 
 def cal(y, x, map):
     result = INF
-    if y == SIZE:
-        for i in range(SIZE):
-            for j in range(SIZE):
-                if map[i][j] == BLACK:
+    if y == size:
+        for i in range(size):
+            for j in range(size):
+                if map[i][j] == black:
                     return INF
         return 0
     
     next_y = y
     next_x = x + 1
-    if next_x >= SIZE:
+    if next_x >= size:
         next_y = y + 1
         next_x = 0
     
     result = min(result, cal(next_y, next_x, map[:]))
     
     for k in range(5):
-        ny = y + DY[k]
-        nx = x + DX[k]
-        if 0 <= ny < SIZE and 0 <= nx < SIZE:
-            if map[ny][nx] == BLACK:
-                map[ny][nx] = WHITE
+        ny = y + dy[k]
+        nx = x + dx[k]
+        if 0 <= ny < size and 0 <= nx < size:
+            if map[ny][nx] == black:
+                map[ny][nx] = white
             else:
-                map[ny][nx] = BLACK
+                map[ny][nx] = black
     
     result = min(result, cal(next_y, next_x, map[:]) + 1)
     
     for k in range(5):
-        ny = y + DY[k]
-        nx = x + DX[k]
-        if 0 <= ny < SIZE and 0 <= nx < SIZE:
-            if map[ny][nx] == BLACK:
-                map[ny][nx] = WHITE
+        ny = y + dy[k]
+        nx = x + dx[k]
+        if 0 <= ny < size and 0 <= nx < size:
+            if map[ny][nx] == black:
+                map[ny][nx] = white
             else:
-                map[ny][nx] = BLACK
+                map[ny][nx] = black
     
     return result
 
-def main():
-    test_cnt = int(input())
-    for _ in range(test_cnt):
-        map = [list(input().strip()) for _ in range(SIZE)]
-        result = cal(0, 0, map)
-        print(result)
 
-if __name__ == "__main__":
-    main()
+test_cnt = int(input())
+for _ in range(test_cnt):
+    map = [list(input().strip()) for _ in range(size)]
+    result = cal(0, 0, map)
+    print(result)
+
