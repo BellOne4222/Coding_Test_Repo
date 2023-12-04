@@ -1,70 +1,34 @@
-from collections import deque
-dx = [0, 0, -1, 1]
-dy = [1, -1, 0, 0]
-field_info = []
+import sys
 
-for _ in range(12):
-    field_info.append(list(input()))
+def bfs():
+    global moving
+    queue = set([(0, 0, board[0][0])]) # 시간 초과를 줄이기 위해 중복되는 곳은 제거
 
-def bfs(a, b, c):
-    global boom_flag
-    boom_list = []
-    deq = deque()
+    while queue:
+        x, y, z = queue.pop()
 
-    deq.append([a,b])
-    boom_list.append([a,b])
+        # 말이 지날 수 있는 최대의 칸 초기화
+        moving = max(moving, len(z))
 
-    field_check[a][b] = True
-
-    n = 1
-
-    while deq:
-        x, y = deq.popleft()
-
+        # 상/하/좌/우 탐색
         for i in range(4):
-            nx, ny = x + dx[i], y + dy[i]
-            if 0 <= nx < 12 and 0 <= ny < 6:
-                if field_info[nx][ny] == c and not field_check[nx][ny]:
-                    field_check[nx][ny] = True
-                    deq.append([nx,ny])
-                    boom_list.append([nx,ny])
-                    n += 1
+            nx = x + dx[i]
+            ny = y + dy[i]
 
-    if n >= 4:
-        for b in boom_list:
-            field_info[b[0]][b[1]] = '.'
-
-        boom_flag = True
-
-boom_count = 0
-
-while True:
-    boom_flag = False
-
-    field_check = [[False] * 6 for _ in range(12)]
-
-    for i in range(12):
-        for j in range(6):
-            if field_info[i][j] != '.':
-                bfs(i,j,field_info[i][j])
+            # 범위 내에 있고 알파벳이 중복이 안된다면 탐색
+            if 0 <= nx < r and 0 <= ny < c and board[nx][ny] not in z:
+                queue.add((nx, ny, board[nx][ny] + z))
+                print(queue)
 
 
-    for i in range(6):
-        rotate_queue = deque()
+r, c = map(int, sys.stdin.readline().split())
 
-        for j in range(11,-1,-1):
-            if field_info[j][i] != '.':
-                rotate_queue.append(field_info[j][i])
+board = [list(map(str, sys.stdin.readline().strip())) for _ in range(r)]
 
-        for j in range(11,-1,-1):
-            if rotate_queue:
-                field_info[j][i] = rotate_queue.popleft()
-            else:
-                field_info[j][i] = '.'
+dx = [1, -1, 0, 0]
+dy = [0, 0, 1, -1]
+moving = 1
 
-    if not boom_flag:
-        break
-    else:
-        boom_count += 1
+bfs()
+print(moving)
 
-print(boom_count)
