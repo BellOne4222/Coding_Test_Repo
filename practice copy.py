@@ -1,51 +1,57 @@
-import sys
 from collections import deque
 
-def bfs(x,y):
-    global moving
-    
-    dx = [1,-1,0,0]
-    dy = [0,0,1,-1]
-    
-    
-    move_lst = []
-    
-    queue = deque()
-    queue.append([x,y])
-    move_lst.append(board[x][y])
-    visited[x][y] = True
-    
-    while queue:
-        cur_x, cur_y = queue.popleft()
+a, b, c = map(int, input().split())
+
+# 경우의 수를 담을 큐
+q = deque()
+q.append((0, 0))
+
+# 방문 여부 저장
+visited = [[False] * (b + 1) for _ in range(a + 1)]
+visited[0][0] = True
+
+answer = []
+
+def pour(x, y):
+    # 방문하지 않았다면 방문 표시 후 큐에 추가
+    if not visited[x][y]:
+        visited[x][y] = True
+        q.append((x, y))
         
-        for i in range(4):
-            nx = cur_x + dx[i]
-            ny = cur_y + dy[i]
-            if 0 <= nx < r and 0 <= ny < c:
-                if board[nx][ny] not in move_lst:       
-                    if not visited[nx][ny]:
-                        move_lst.append(board[nx][ny])
-                        visited[nx][ny] = True
-                        queue.append([nx,ny]) 
-    
-    moving = max(moving, len(move_lst))
+def bfs():
+    while q:
+        # A물통에 있는 물: x, B물통에 있는 물: y, C물통에 있는 물: z
+        x, y = q.popleft()
+        z = c - x - y
         
+        # A 물통이 비어있는 경우에 C 물통에 남아있는 양 저장
+        if x == 0:
+            answer.append(z)
+            
+        # A에서 B로 물 이동
+        water = min(x, b - y)
+        pour(x - water, y + water)
+        # A에서 C로 물 이동
+        water = min(x, c - z)
+        pour(x - water, y)
         
+        # B에서 C로 물 이동
+        water = min(y, c - z)
+        pour(x, y - water)
+        # B에서 A로 물 이동
+        water = min(y, a - x)
+        pour(x + water, y - water)
+        
+        # C에서 A로 물 이동
+        water = min(z, a - x)
+        pour(x + water, y)
+        # C에서 B로 물 이동
+        water = min(z, b - y)
+        pour(x, y + water)
+        
+bfs()
 
-
-r,c = map(int, sys.stdin.readline().split())
-
-board = []
-
-for _ in range(r):
-    line = list(sys.stdin.readline().rstrip())
-    board.append(line)
-    
-
-visited = [[False for _ in range(c)] for _ in range(r)]
-
-moving = -1
-
-bfs(0,0)
-
-print(moving)
+# 결과 정렬 후 출력
+answer.sort()
+for i in answer:
+    print(i, end=" ")
