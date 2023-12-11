@@ -61,10 +61,13 @@ def bfs():
                 if grid[i][j] == '*':
                     for k in range(4):
                         x, y = i + dx[k], j + dy[k]
-                        if not(0 <= x < n and 0 <= y < m): continue
+                        if not(0 <= x < n and 0 <= y < m):
+                            continue
                         # 도착지점은 물 번지지 않도록 예외 처리
-                        if x == ex and y == ey: continue
-                        if grid[x][y] == '.': water.append((x, y))
+                        if x == ex and y == ey:
+                            continue
+                        if grid[x][y] == '.':
+                            water.append((x, y))
         
         for x, y in water:
             grid[x][y] = '*'  # 물이 번짐
