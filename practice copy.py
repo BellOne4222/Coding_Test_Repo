@@ -1,23 +1,15 @@
 import sys
 
-t = int(sys.stdin.readline())
+n = int(sys.stdin.readline())
 
+boxes = list(map(int, sys.stdin.readline().split()))
 
-for _ in range(t):
-    dp_table = [0] * 101
-    n = int(sys.stdin.readline())
-    
-    dp_table[1] = 1
-    dp_table[2] = 1
-    dp_table[3] = 1
-    dp_table[4] = 2
-    dp_table[5] = 2
-    
-    if n < 6:
-        print(dp_table[n])
-    else:
-        for i in range(6, n+1):
-            dp_table[i] = dp_table[i-5] + dp_table[i-1]
+dp_table = [1] * n
 
-        print(dp_table[n])
+for i in range(n):
+    for j in range(i):
+        if boxes[i] > boxes[j]:
+            dp_table[i] = max(dp_table[i], dp_table[j] + 1)
+
+print(max(dp_table))
     
