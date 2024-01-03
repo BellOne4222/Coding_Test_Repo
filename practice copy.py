@@ -3,12 +3,12 @@
 import sys
 
 
-n = int(sys.stdin().readline())
+n = int(sys.stdin.readline())
 
 dp_table = [1] * (n+1)
 nums = [0]
 for i in range(n):
-    nums.append(int(sys.stdin().readline()))
+    nums.append(int(sys.stdin.readline()))
 
 #가장 긴 증가하는 수열 찾기 
 for i in range(1,n+1):
