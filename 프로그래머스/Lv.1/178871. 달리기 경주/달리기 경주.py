@@ -7,7 +7,6 @@ def solution(players, callings):
     
     for j in callings:
         
-        
         idx = idx_dictionary[j] # 호명된 선수의 현재 등수
         
         idx_dictionary[j] -= 1 # 하나 앞 등수로 바꿔줌 -1

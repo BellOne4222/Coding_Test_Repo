@@ -1,20 +1,15 @@
-# https://velog.io/@soobin519/Python-%EB%B0%B1%EC%A4%80-2631-%EC%A4%84%EC%84%B8%EC%9A%B0%EA%B8%B0
+# https://velog.io/@tiiranocode/Python-%EC%95%8C%EA%B3%A0%EB%A6%AC%EC%A6%98-%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%98%EB%A8%B8%EC%8A%A4-%ED%8A%9C%ED%94%8C 참고
 
-import sys
+s = "{{2},{2,1},{2,1,3},{2,1,3,4}}"
 
+lst = sorted([s.split(',') for s in s[2:-2].split('},{')], key=len)
 
-n = int(sys.stdin.readline())
+result = []
 
-dp_table = [1] * (n+1)
-nums = [0]
-for i in range(n):
-    nums.append(int(sys.stdin.readline()))
+for i in lst:
+    for j in i:
+        if int(j) not in result:
+            result.append(int(j))
+            break
 
-#가장 긴 증가하는 수열 찾기 
-for i in range(1,n+1):
-    for j in range(1,i):
-        if nums[j] < nums[i]:
-            dp_table[i]=max(dp_table[i],dp_table[j]+1)
-
-#n- 긴 증가하는 부분수열의 길이 
-print(n-max(dp_table))
+print(result)
