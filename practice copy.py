@@ -1,15 +1,41 @@
-# https://velog.io/@tiiranocode/Python-%EC%95%8C%EA%B3%A0%EB%A6%AC%EC%A6%98-%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%98%EB%A8%B8%EC%8A%A4-%ED%8A%9C%ED%94%8C 참고
 
-s = "{{2},{2,1},{2,1,3},{2,1,3,4}}"
+book_time = [["05:57", "06:02"], ["04:00", "06:59"], ["03:56", "07:57"], ["06:12", "08:55"], ["07:09", "07:11"]]
 
-lst = sorted([s.split(',') for s in s[2:-2].split('},{')], key=len)
+book_time.sort()
+# [['14:10', '19:20'], ['14:20', '15:20'], ['15:00', '17:00'], ['16:40', '18:20'], ['18:20', '21:20']]
+    
+booking = []
+    
+for i in range(len(book_time)):
+    end_time = book_time[i][1]
+    end_time_hour, end_time_min = end_time.split(":")
+    end_time_min = int(end_time_min)
+    end_time_min += 10
+    if end_time_min >= 60:
+        end_time_hour = int(end_time_hour)
+        end_time_hour += 1
+        end_time_hour = str(end_time_hour)
+        if len(end_time_hour) < 2:
+            end_time_hour = end_time_hour.zfill(2)
+        end_time_min -= 60
+            
+        end_time_min = str(end_time_min)
+        if len(end_time_min) < 2:
+            end_time_min = end_time_min.zfill(2)
+    else:
+        end_time_min = str(end_time_min)
+        
+    cleaning_time = end_time_hour + ":" + end_time_min # 19:30      
+        
+    if booking:
+        if booking[0] > book_time[i][0]:
+            booking.append(cleaning_time)
+        else:
+            booking.pop(0)
+            booking.append(cleaning_time)
+        booking.sort()
+                
+    else:
+        booking.append(cleaning_time)
 
-result = []
-
-for i in lst:
-    for j in i:
-        if int(j) not in result:
-            result.append(int(j))
-            break
-
-print(result)
+print(len(booking))
