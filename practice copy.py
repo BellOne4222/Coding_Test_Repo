@@ -1,71 +1,46 @@
-from collections import deque
+# https://school.programmers.co.kr/questions/58068 참고
 
-# 아래 반례 해결 실패
-# 입력값 〉	[10, 1, 10, 2, 10, 3, 10, 10, 10, 11, 11, 11, 12]
-# 기댓값 〉	[11, 10, 11, 10, 11, 10, 11, 11, 11, 12, 12, 12, -1]
-# 결괏값 > [12, 10, 12, 10, 12, 10, 12, 12, 11, 12, 12, 12, -1]
+from itertools import product
 
-def solution(numbers):
-    # 결과를 담을 deque 생성
-    result = deque()
+users = [[40, 10000], [25, 10000]]
+emoticons = [7000, 9000]
 
-    # 맨 마지막 원소에 대한 뒷 큰수는 항상 -1이므로 먼저 deque에 추가
-    result.appendleft(-1)
+discount_rates = [10, 20, 30, 40]
+result = []
 
-    # 이전 순회에서의 현재 원소와 그보다 큰 수 중 가장 큰 값을 저장할 변수 초기화
-    prev_num = numbers[len(numbers) - 1]
-    prev_max_num = -1
+# 가능한 이모티콘 할인율의 모든 조합을 생성
+discount_cases = list(product(discount_rates, repeat=len(emoticons)))
 
-    # 배열의 끝에서부터 역순으로 순회
-    for i in reversed(range(len(numbers) - 1)):
-        # 현재 원소보다 이전 원소가 크다면
-        if prev_num > numbers[i]:
-            # 결과 deque에 현재 원소보다 큰 수 추가
-            result.appendleft(prev_num)
-            # 현재 원소가 이전 순회에서의 가장 큰 수보다 크다면 업데이트
-            if prev_max_num < prev_num:
-                prev_max_num = prev_num
+# 모든 할인 조합에 대해 가입자 수와 판매액 계산
+for discount_case in discount_cases:
+    members = 0  # 가입자 수 초기화
+    income = 0   # 판매액 초기화
+
+    # 각 사용자에 대해 구매 여부 확인
+    for required_discount, budget in users:
+        purchased = 0
+
+        # 각 이모티콘에 대해 사용자의 구매 여부 판단
+        for i in range(len(emoticons)):
+            if required_discount <= discount_case[i]:
+                # 한 사용자의 구매액은 자신의 기준 할인율 이상 할인하는 이모티콘의 할인가
+                purchased += emoticons[i] - emoticons[i] * discount_case[i] * 0.01
+            
+        if purchased >= budget:
+            # 총 구매액이 사용자의 예산 이상이면, 구매하지 않고 플러스 가입자로 처리
+            members += 1
+        else:
+            # 그렇지 않다면 이모티콘을 구매하므로 총 판매액에 합산
+            income += purchased
         
-        elif numbers[i] == numbers[i+1]:
-            result.appendleft(result[0])
-            prev_max_num = result[0]
-
-        else:
-            # 현재 원소보다 이전 원소가 작다면
-            if numbers[i] > prev_max_num:
-                # 결과 deque에 -1 추가
-                result.appendleft(-1)
-                # 현재 원소가 이전 순회에서의 가장 큰 수보다 크면 업데이트
-                prev_max_num = numbers[i]
-            else:
-                # 현재 원소보다 큰 수가 존재한다면 결과 deque에 추가
-                result.appendleft(prev_max_num)
-
-        # 이전 순회에서의 현재 원소를 업데이트
-        prev_num = numbers[i]
+    # 할인 조합별 총 가입자 수와 판매액을 배열에 저장
+    result.append((members, income))
+    # 	[(0, 0), (0, 0), (0, 6300.0), (0, 10800.0), (0, 0), (0, 0), (0, 6300.0), (0, 10800.0), (0, 4900.0), (0, 4900.0), (1, 0), (1, 5400.0), 
+    # (0, 8400.0), (0, 8400.0), (1, 4200.0), (0, 19200.0)]
     
-    # deque를 list로 변환하여 결과 반환
-    result = list(result)
-    
-    return result
+# 조합별로 가입자 수가 많은 순서대로, 가입자 수가 같으면 판매액이 많은 순서대로 정렬
+answer = sorted(result, reverse=True, key=lambda x: (x[0], x[1]))
+# [(1, 5400.0), (1, 4200.0), (1, 0), (0, 19200.0), (0, 10800.0), (0, 10800.0), (0, 8400.0), (0, 8400.0), (0, 6300.0), (0, 6300.0), (0, 4900.0), 
+# (0, 4900.0), (0, 0), (0, 0), (0, 0), (0, 0)]
 
-from collections import deque
-
-def solution(numbers):
-    result = deque()
-    stack = []
-
-    for i in range(len(numbers)-1, -1, -1):
-        current_number = numbers[i]
-
-        while stack and stack[-1] <= current_number:
-            stack.pop()
-
-        if not stack:
-            result.appendleft(-1)
-        else:
-            result.appendleft(stack[-1])
-
-        stack.append(current_number)
-
-    return list(result)
+print(answer[0])
