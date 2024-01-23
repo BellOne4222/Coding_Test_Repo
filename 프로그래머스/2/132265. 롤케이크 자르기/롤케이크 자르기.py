@@ -1,3 +1,6 @@
+# 시간 복잡도: O(N)
+# 공간 복잡도: O(N)
+
 from collections import Counter
 
 def solution(topping):

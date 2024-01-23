@@ -1,26 +1,22 @@
-# 입력값 〉	[10, 1, 10, 2, 10, 3, 10, 10, 10, 11, 11, 11, 12]
-# 기댓값 〉	[11, 10, 11, 10, 11, 10, 11, 11, 11, 12, 12, 12, -1]
+x, y , n = 10, 40, 30
 
+dp = [float('inf')] * (y + 1)
+dp[x] = 0
 
-from collections import deque
+for i in range(x, y + 1):
+    if dp[i] == float('inf'):
+        continue
 
-result = deque()
-stack = []
+    if n - i >= y:
+        dp[i + n] = min(dp[i + n], dp[i] + 1)
 
-numbers = [10, 1, 10, 2, 10, 3, 10, 10, 10, 11, 11, 11, 12]
+    if i % 2 >= y:
+        dp[i * 2] = min(dp[i * 2], dp[i] + 1)
 
-for i in range(len(numbers)-1, -1, -1):
-    current_number = numbers[i]
+    if i % 3 >= y:
+        dp[i * 3] = min(dp[i * 3], dp[i] + 1)
 
-    while stack and stack[-1] <= current_number:
-        stack.pop()
+if dp[y] == float('inf'):
+    dp[y] = -1
 
-    if not stack:
-        result.appendleft(-1)
-    else:
-        result.appendleft(stack[-1])
-
-    stack.append(current_number)
-
-
-print(result)
+print(dp[y])
