@@ -1,24 +1,15 @@
-from collections import Counter
+n = 11
 
-topping = [1, 2, 1, 3, 1, 4, 1, 2]	
+nums = ["1", "2", "4"]
 
-answer = 0
-chulsu = Counter(topping) 
-brother = set()
-    
-for t in topping:
-    chulsu[t] -= 1
-    brother.add(t)
-        
-    if chulsu[t] == 0:
-        chulsu.pop(t)
-            
-    if len(chulsu) == len(brother):
-        answer += 1
+ans = ""
 
-print(answer)
+while n > 0:
+    n = n - 1
+    ans = nums[n%3] + ans
+    n //= 3
 
-        
+print(ans)
     
     
     
