@@ -6,7 +6,6 @@ answer = 0
 board = list(map(list, board))
     
 while True:
-    # temp = check(m, n, board)
     
     filter = [[0 for _ in range(n)] for _ in range(m)]
     count = 0
@@ -45,5 +44,3 @@ while True:
     answer += temp
         
 print(answer)
-
-# print(solution(4,	5,	["CCBDE", "AAADE", "AAABF", "CCBBF"]))

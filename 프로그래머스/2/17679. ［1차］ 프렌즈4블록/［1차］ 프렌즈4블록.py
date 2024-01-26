@@ -42,7 +42,6 @@ def check(m, n, board):
                 
     return count
     
-
 # check 함수
 # filter 배열을 초기화하고, count 변수를 0으로 초기화합니다.
 # 이중 반복문을 통해 주어진 판을 탐색하면서 2x2로 같은 모양의 블록을 찾습니다.
