@@ -1,46 +1,56 @@
+storey = 555
 
+stone = 0
+    
+# storey가 10 미만인 경우
+if storey < 10:
+    # storey가 10 미만이고 5 이하인 경우
+    if storey <= 5:
+        stone += 2554 # -1 돌을 storey 만큼 사용
 
-m, n, board= 4,	5,	["CCBDE", "AAADE", "AAABF", "CCBBF"]
-
-answer = 0
-board = list(map(list, board))
-    
-while True:
-    
-    filter = [[0 for _ in range(n)] for _ in range(m)]
-    count = 0
-    
-    for i in range(m-1):
-        for j in range(n-1):
-            a = board[i][j]
-            b = board[i][j+1]
-            c = board[i+1][j]
-            d = board[i+1][j+1]
-            if a == b == c == d and a != '0':
-                filter[i][j], filter[i][j+1], filter[i+1][j], filter[i+1][j+1] = 1, 1, 1, 1
-    
-    for i in range(m):
-        for j in range(n):
-            if filter[i][j] == 1:
-                count += 1
-                board[i][j] = '0'
-    
-    if count == 0:
-        temp = 0
-    
-    for i in range(m-2, -1, -1):
-        for j in range(n):
-            k = i
-            while 0 <= k+1 < m and board[k+1][j] == '0':
-                k += 1
-            if k != i:
-                board[k][j] = board[i][j]
-                board[i][j] = '0'
-    
-    temp = count
-    
-    if temp == 0:
-        break
-    answer += temp
+    # storey가 10 미만이고 5초과 인경우
+    else:
+        stone += (11 - storey) # + 1 돌을 10이 될때까지 사용 후 -10 돌을 한번 사용
         
-print(answer)
+    
+# storey가 10 이상인 경우
+else:
+    c = 1
+    while True:
+        cur_stone = 0
+            
+        # 10의 제곱수를 한자리씩 늘리면서 비교
+        standard = 10 ** c
+            
+        # standard로 나눈 나머지
+        rest = (storey % standard)
+            
+        # 나머지가 5이하이면 rest만큼 stone 사용 후 storey에서 stone 사용 수 * (standard ** c-1)만큼 차감
+        if rest < (5 * pow(10, c-1)):
+            cur_stone += (rest // pow(10, c-1))
+            storey -= (cur_stone * pow(10, c-1))
+            stone += cur_stone
+        
+        elif rest == (5 * pow(10, c-1)):
+            a = (storey % pow(10, c+1)) + rest
+            if a >= (6 * standard):
+                cur_stone += (pow(10, c) - rest) // pow(10, c-1)
+                storey += (cur_stone * pow(10, c-1))
+                stone += cur_stone
+            else:
+                cur_stone += (rest // pow(10, c-1))
+                storey -= (cur_stone * pow(10, c-1))
+                stone += cur_stone
+            
+        # 나머지가 6이상이면 ((standard ** c) - rest) // (standard ** c-1) 만큼 돌 사용 후 storey에 stone 사용 수 * (standard ** c-1)만큼 추가  
+        else:
+            cur_stone += (pow(10, c) - rest) // pow(10, c-1)
+            storey += (cur_stone * pow(10, c-1))
+            stone += cur_stone
+            
+        c += 1
+            
+        if storey == 0:
+            break
+
+print(stone)
