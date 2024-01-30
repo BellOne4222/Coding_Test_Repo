@@ -29,7 +29,11 @@ def solution(storey):
                 cur_stone += (rest // pow(10, c-1))
                 storey -= (cur_stone * pow(10, c-1))
                 stone += cur_stone
-                
+            
+            # 반례 : 75, 555
+            # 나머지가 5이면 상위의 자리까지 고려
+            # 5를 더했을 때 상위의 자리가 6이상이면 ((standard ** c) - rest) // (standard ** c-1) 만큼 돌 사용 후 storey에 stone 사용 수 * (standard ** c-1)만큼 추가  
+            # 5를 더했을 때 상위의 자리가 6미만이면 rest만큼 stone 사용 후 storey에서 stone 사용 수 * (standard ** c-1)만큼 차감
             elif rest == (5 * pow(10, c-1)):
                 a = (storey % pow(10, c+1)) + rest
                 if a >= (6 * standard):
@@ -47,8 +51,9 @@ def solution(storey):
                 storey += (cur_stone * pow(10, c-1))
                 stone += cur_stone
 
-            c += 1
+            c += 1 # standard 자리수 올리기
 
+            # storey가 0이면 종료
             if storey == 0:
                 break
     
