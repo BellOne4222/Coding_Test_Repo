@@ -1,49 +1,83 @@
-def fibo(x):
-    if x == 1 or x == 2:
-        return 1
-    return fibo(x-1) + fibo(x-2)
+# cap, n, deliveries, pickups = 2,7,[1, 0, 2, 0, 1, 0, 2], [0, 2, 0, 1, 0, 2, 0]	
+cap, n, deliveries, pickups = 4,	5,	[1, 0, 3, 1, 2],	[0, 3, 0, 4, 0]
 
-print(fibo(4))
+total_distance = 0
 
-# Bottom-Up : 반복문을 사용하여 작은 문제 부터 답을 도출
-
-# 결과를 저장하기 위한 dp 테이블 초기화
-d = [0] * 100
-
-# 1, 2번째 피보나치 수는 1
-d[1] = 1
-d[2] = 1
-n = 99
-
-# 반복문으로 3~n까지 피보나치 수 구하기
-for i in range(3, n+1):
-    d[i] = d[i-1] + d[i-2]
-
-print(d[n])
-
-# setrecursionlimit()을 사용해 재귀 제한을 완화 시킬수 있다. sys.setrecursionlimit() -> 재귀 깊이 관련 오류 해결
-
-# 재귀적 풀이, Memoziation 사용
-# Memoziation : 한 번 구한 결과를 메모리 공간에 메모해두고 같은 식을 다시 호출하면 메모한 결과를 그대로 가져오는 기법
-# 한 번 구한 정보를 리스트에 저장하고 리스트에서 가져온다.
-# 탑 다운 :  큰 문제를 해결하기 위해 작은 문제를 호출하는 기법
-
-# 한 번 계산된 결과를 Memoziation하기 위한 리스트 초기화
-d = [0] * 100
-
-# 피보나치 함수를 재귀 함수로 구현(탑 다운)
-def fibo(x):
-    # 종료 조건
-    if x == 1 or x == 2:
-        return 1
+while True:
+    cur_cap = cap
+    delivery_distance = 0
+    delivery_chk = False
+    last_delivery = 0
+    pickup_distance = 0
+    pickup_chk = False
     
-    # d리스트에 값이 있으면(0이 아니면) = 이미 계산한 결과라면, 그대로 리스트에서 가져온다.
-    if d[x] != 0:
-        return d[x]
+    # 배달
+    if not all(element == 0 for element in deliveries):
+        for i in reversed(range(n)):
+        # 배달 할 물건이 있을 떄
+            if deliveries[i] != 0:
+                # 집에 배달 할 수 있는 택배의 수를 모두 배달 할 수 있는 경우
+                if cur_cap - deliveries[i] >= 0:
+                    cur_cap -= deliveries[i] # 택배 모두 배송
+                    if not delivery_chk: # 제일 끝 배달한 집 주소 저장
+                        delivery_chk = True
+                        delivery_distance += i+1
+                        last_delivery = i+1
+                    deliveries[i] = 0
+                    
+                
+                # 집에 배달 할 수 있는 택배의 수를 모두 배달 할 수 없는 경우
+                else:
+                    if cur_cap != 0:
+                        deliveries[i] = deliveries[i] - cur_cap # 부분 배달 처리
+                        break
+                # 트럭이 가득차면 배달 종료
+                if cur_cap == 0:
+                    break
+        
+    
+        
+    if not all(element == 0 for element in pickups):
+        # 수거
+        for j in reversed(range(n)):
+            # 수거 할 물건이 있을 때
+            if pickups[j] != 0:
+                # 집에 있는 박스를 모두 수거 할 수 있는 경우
+                if cur_cap + pickups[j] <= cap:
+                    cur_cap += pickups[j] # 수거
+                    pickups[j] = 0
+                    
+                    if not pickup_chk:
+                        pickup_chk = True
+                        last_pickup = j+1 
+                    
+                    # 배송한 가장 끝집부터 수거 하므로 배송한 가장 마지막 지점부터 수거 거리 계산
+                    if last_delivery != 0:
+                        pickup_distance += last_delivery
+                    # 배송을 안하고 수거만 한 경우
+                    else:
+                        pickup_distance += last_pickup
+                # 부분 수거
+                else:
+                    if cur_cap < cap:
+                        pickups[j] = pickups[j] - (cap - cur_cap)
+                        
+                
+    
+    total_distance += delivery_distance
+    total_distance += pickup_distance
+        
+    if all(element == 0 for element in deliveries) and all(element == 0 for element in pickups):
+        break
 
-    # 없으면 점화식으로 결과 반환
-    d[x] = fibo(x-1) + fibo(x-2)
-    return d[x]
-
-print(fibo(99))
+print(total_distance)
+                    
+                        
+                    
+                    
+        
+    
+        
+            
+            
 
