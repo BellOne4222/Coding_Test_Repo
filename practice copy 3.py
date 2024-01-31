@@ -1,22 +1,20 @@
-x, y , n = 10, 40, 30
+import heapq
 
-dp = [float('inf')] * (y + 1)
-dp[x] = 0
+n,	k,	enemy = 7,	3,	[4, 2, 4, 5, 3, 3, 1]
 
-for i in range(x, y + 1):
-    if dp[i] == float('inf'):
-        continue
-
-    if n - i >= y:
-        dp[i + n] = min(dp[i + n], dp[i] + 1)
-
-    if i % 2 >= y:
-        dp[i * 2] = min(dp[i * 2], dp[i] + 1)
-
-    if i % 3 >= y:
-        dp[i * 3] = min(dp[i * 3], dp[i] + 1)
-
-if dp[y] == float('inf'):
-    dp[y] = -1
-
-print(dp[y])
+stage = len(enemy)
+if k >= stage :
+    stage = stage
+else:
+    q = []
+    
+    for i in range(stage) :
+        heapq.heappush(q, enemy[i])
+        if len(q) > k :
+            last = heapq.heappop(q)
+            if last > n :
+                break
+            n -= last
+# 출처: https://magentino.tistory.com/51 [마젠티노 IT개발스토리:티스토리]
+    
+print(i)
