@@ -1,3 +1,5 @@
+# 참고 : https://velog.io/@mimmimmu/PGS-%EB%A6%AC%EC%BD%94%EC%B3%87-%EB%A1%9C%EB%B4%87-%ED%8C%8C%EC%9D%B4%EC%8D%AC
+
 from collections import deque
 
 def solution(board):

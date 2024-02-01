@@ -1,54 +1,60 @@
-cap,	n,	deliveries,	pickups = 2,7,[1, 0, 2, 0, 1, 0, 2], [0, 2, 0, 1, 0, 2, 0]	
+from collections import deque
 
-total_distance = 0
+def solution(board):
     
+    result = 0
     
-while True:
-    cur_cap = 0
-    delivery_cnt = False
-    pickup_cnt = False
-    delivery = 0
-    pickup = 0
-    delivery_distance = 0
-    pickup_distance = 0
-    last_delivery = 0
+    R = len(board)
+    C = len(board[0])
     
-    for i in reversed(range(n)):
-        if deliveries[i] != 0:
-            if cur_cap + deliveries[i] <= cap:
-                cur_cap += deliveries[i]
-                delivery += deliveries[i]
-                deliveries[i] = 0
+    cur_x, cur_y = 0, 0
+    
+    for i in range(len(board)):
+        for j in range(len(board[0])):
+            if board[i][j] == "R":
+                cur_x, cur_y = i, j
                 
-                if not delivery_cnt:
-                    delivery_cnt = True
-                    delivery_distance += i+1
-                    last_delivery = i+1
-            else:
-                break
+    dx = [-1, 1, 0, 0]
+    dy = [0, 0, -1, 1]
     
-    cur_cap = 0
-     
+    def bfs():
+        queue = deque()
+        queue.append((cur_x, cur_y))
+        visited = [[0]*C for _ in range(R)]
+        visited[cur_x][cur_y] = 1
         
-    for j in reversed(range(n)):
-        if pickups[j] != 0:
-            if cur_cap + pickups[j] <= cap:
-                cur_cap += pickups[j]
-                pickups[j] = 0
-                if not pickup_cnt:
-                    pickup_cnt = True
-                    if last_delivery != 0:
-                        pickup_distance += last_delivery
-                    else:
-                        pickup_distance += j+1
-                        
-            else:
-                break
+        while queue:
+            
+            cx, cy = queue.popleft()
+            
+            if board[cx][cy] == 'G':
+                return visited[cx][cy]
+            
+            for i in range(4):
+                
+                nx, ny = cx, cy
+                
+                while True:
+                    nx, ny = nx+dx[i], ny+dy[i]
+                    
+                    if 0 <= nx < R and 0 <= ny < C and board[nx][ny]=='D':
+                        nx -= dx[i]
+                        ny -= dy[i]
+                        break
+                    
+                    if nx < 0 or nx >= R or ny < 0 or ny >= C:
+                        nx -= dx[i]
+                        ny -= dy[i]
+                        break
+                    
+                if not visited[nx][ny]:
+                    visited[nx][ny] = visited[cx][cy] + 1
+                    queue.append((nx, ny))
+        return -1
+                    
+    result = bfs()
+    
+    if result > 0:
+        result -= 1
         
-    total_distance += delivery_distance
-    total_distance += pickup_distance
-        
-    if all(element == 0 for element in deliveries) and all(element == 0 for element in pickups):
-        break
-
-print(total_distance)
+    return result           
