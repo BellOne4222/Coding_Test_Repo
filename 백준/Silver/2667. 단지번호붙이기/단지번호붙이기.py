@@ -1,50 +1,47 @@
-# dfs
+import sys
+from collections import deque
 
-n = int(input())
-graph = []
-houses = [] # 집 개수를 받을 배열
+# BFS 함수 정의
+def bfs(x, y, graph):
+    house = 1  # 단지 내 집의 수를 저장할 변수
+    queue = deque()  # BFS를 위한 큐 생성
+    queue.append([x, y])  # 시작점 추가
+    visited[x][y] = True  # 시작점 방문 표시
+
+    dx = [1, -1, 0, 0]  # 이동할 수 있는 방향 (상, 하, 좌, 우)
+    dy = [0, 0, 1, -1]
+
+    while queue:
+        cur_x, cur_y = queue.popleft()  # 큐에서 현재 위치를 꺼내옴
+
+        for i in range(4):  # 상하좌우 방향에 대해 탐색
+            nx = cur_x + dx[i]
+            ny = cur_y + dy[i]
+            if 0 <= nx < n and 0 <= ny < n and graph[nx][ny] == 1:
+                if not visited[nx][ny]:  # 방문하지 않은 집인 경우
+                    queue.append([nx, ny])  # 다음 위치를 큐에 추가
+                    visited[nx][ny] = True  # 해당 위치를 방문했다고 표시
+                    house += 1  # 집의 수 증가
+                    
+    return house  # 현재 단지의 집 수 반환
 
 
+n = int(sys.stdin.readline())  # 지도의 크기 입력
+
+graph = [list(map(int, sys.stdin.readline().rstrip())) for _ in range(n)]  # 지도 정보 입력
+
+visited = [[False for _ in range(n)] for _ in range(n)]  # 방문 여부를 저장할 2차원 리스트 초기화
+
+houses = []  # 각 단지 내 집의 수를 저장할 리스트
+
+# 모든 지점에 대해 탐색
 for i in range(n):
-    graph.append(list(map(int,input())))
+    for j in range(n):
+        if graph[i][j] == 1 and not visited[i][j]:  # 집이 있고 아직 방문하지 않은 곳인 경우
+            houses.append(bfs(i, j, graph))  # BFS 탐색을 시작하고 집의 수를 리스트에 추가
 
-dx = [-1,1,0,0]
-dy = [0,0,-1,1]    
-    
-def dfs(x,y):
-    # 범위 벗어나면 False
-    if x < 0 or x >= n or y < 0 or y >= n:
-        return False
-    
-    # 그래프의 칸이 1이면 집이 있는 곳이므로 집 개수 +=1
-    if graph[x][y] == 1:
-        global house_cnt
-        house_cnt += 1
-        # 세었으면 방문 처리
-        graph[x][y] = 0
+houses.sort()  # 집의 수를 오름차순으로 정렬
 
-        # 상하좌우로 dfs 실행해서 탐색
-        for i in range(4):
-            nx = x + dx[i]
-            ny = y + dy[i]
-            dfs(nx,ny)
-        return True
-    return False
-    
-
-house_cnt = 0 # 집 개수
-village_cnt = 0 # 마을 개수
-
-# True이면 집 개수 배열에 추가하고 마을 개수 += 1 하고 집 개수 초기화
-for j in range(n):
-    for k in range(n):
-        if dfs(j,k) == True:
-            houses.append(house_cnt)
-            village_cnt += 1
-            house_cnt = 0
-
-# 오름차순 정렬
-houses.sort()
-print(village_cnt)
-for l in range(len(houses)):
-    print(houses[l])
+print(len(houses))  # 총 단지 수 출력
+for k in range(len(houses)):
+    print(houses[k])  # 각 단지 내 집의 수 출력
