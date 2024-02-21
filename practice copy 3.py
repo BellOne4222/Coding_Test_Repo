@@ -1,31 +1,31 @@
 import sys
 from collections import deque
 
-def bfs(x, y, end_x, end_y, move, l):
+def bfs(x, y, end_x, end_y):
     
-    if x == end_x and y == end_y:
-        return 0
     # 나이트가 이동 할 수 있는 8가지 방향
-    dx = [-1,1,2,2,-2,-2,2,2]
-    dy = [2,2,1,-1,1,-1,-1,1]
+    dx = [-1,1,2,2,1,-1,-2,-2]
+    dy = [2,2,1,-1,-2,-2,-1,1]
     
     queue = deque()
-    queue.append((x, y, move))
-    
+    queue.append((x, y))
+
     while queue:
-        cur_x, cur_y, cur_move = queue.popleft()
-        visited[cur_x][cur_y] = True
+        cur_x, cur_y = queue.popleft()
+        
+        if cur_x == end_x and cur_y == end_y:
+            return visited[cur_x][cur_y] - 1
         
         for i in range(8):
             nx = cur_x + dx[i]
             ny = cur_y + dy[i]
             
             if 0 <= nx < l and 0 <= ny < l:
-                if visited[nx][ny] == False:
-                    visited[nx][ny] = True
-                    queue.append((nx, ny, cur_move + 1))
-                if nx == end_x and ny == end_y:
-                    return cur_move + 1
+                if visited[nx][ny] == 0:
+                    queue.append((nx, ny))
+                    visited[nx][ny] = visited[cur_x][cur_y] + 1
+                    
+                
         
     
 
@@ -37,6 +37,7 @@ for i in range(t):
     start_x, start_y = map(int, sys.stdin.readline().split()) # 나이트의 현재 x,y좌표
     end_x, end_y = map(int, sys.stdin.readline().split())  # 나이트의 목적 x,y좌표
     
-    visited = [[False] * l for _ in range(l)] # 방문 여부를 저장할 배열 초기화
+    visited = [[0] * l for _ in range(l)] # 방문 여부를 저장할 배열 초기화
+    visited[start_x][start_y] = 1
     
-    print(bfs(start_x, start_y, end_x, end_y, 0, l)) # 최소 이동 횟수 출력
+    print(bfs(start_x, start_y, end_x, end_y)) # 최소 이동 횟수 출력
