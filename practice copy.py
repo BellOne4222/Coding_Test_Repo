@@ -30,11 +30,6 @@ def bfs(x,y,trashes):
     return trashes
     
     
-                        
-                        
-                        
-        
-
 n,m,k = map(int, sys.stdin.readline().split())
 
 graph = [[0 for _ in range(m)] for _ in range(n)] # [[1, 0, 0, 0], [0, 1, 1, 0], [1, 1, 0, 0]]
