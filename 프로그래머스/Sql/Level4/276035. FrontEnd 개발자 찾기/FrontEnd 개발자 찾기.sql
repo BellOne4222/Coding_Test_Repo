@@ -19,18 +19,18 @@ WHERE CATEGORY = 'Front End'
 */
 ORDER BY ID;
 
-# # 서브쿼리
-# /*
-# DEVELOPERS 테이블에서 Front End 스킬을 가진 개발자의 정보를 조회합니다.
-# */
-# SELECT ID, EMAIL, FIRST_NAME, LAST_NAME
-# FROM DEVELOPERS
-# /*
-# SKILLCODES 테이블에서 CATEGORY가 'Front End'인 스킬들의 코드를 합산하여,
-# 해당 코드들을 가진 개발자를 조회합니다.
-# */
-# WHERE SKILL_CODE & (SELECT SUM(CODE) FROM SKILLCODES WHERE CATEGORY = 'Front End')
-# /*
-# 개발자의 ID를 기준으로 오름차순으로 정렬합니다.
-# */
-# ORDER BY ID;
+# 서브쿼리
+/*
+DEVELOPERS 테이블에서 Front End 스킬을 가진 개발자의 정보를 조회합니다.
+*/
+SELECT ID, EMAIL, FIRST_NAME, LAST_NAME
+FROM DEVELOPERS
+/*
+SKILLCODES 테이블에서 CATEGORY가 'Front End'인 스킬들의 코드를 합산하여,
+해당 코드들을 가진 개발자를 조회합니다.
+*/
+WHERE SKILL_CODE & (SELECT SUM(CODE) FROM SKILLCODES WHERE CATEGORY = 'Front End')
+/*
+개발자의 ID를 기준으로 오름차순으로 정렬합니다.
+*/
+ORDER BY ID;
