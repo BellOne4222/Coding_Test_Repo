@@ -1,27 +1,23 @@
-from itertools import combinations
-from collections import Counter
+#5
+# SUBMISSIONS 테이블은 유저의 제출 정보를 담고 있는 테이블입니다. SUBMISSIONS 테이블의 구조는 다음과 같으며, ID, USER_ID, PROBLEM_ID, SUBMITTED, TIMESTAMP는 각각 ID, 유저의 ID, 문제의 ID, 제출한 답, 제출한 시각을 나타냅니다.
+# TIMESTAMP는 대회가 시작하고 지난 시간(초)을 나타냅니다.
 
-def solution(orders, course):    
-    
-    result = []
-    
-    for num in course:
-        combinationMenus = []
-        for order in orders:
-            for i in combinations(order, num):
-                combiMenu = ''.join(sorted(i))
-                combinationMenus.append(combiMenu)
-        hotCombiMenu = Counter(combinationMenus).most_common() # Counter({'AC': 4, 'CD': 3, 'CE': 3, 'DE': 3, 'BC': 2, 'BF': 2, 'BG': 2, 'CF': 2, 'CG': 2, 'FG': 2, 'AD': 2, 'AE': 2, 'AB': 1, 'AF': 1, 'AG': 1, 'AH': 1, 'CH': 1, 'DH': 1, 'EH': 1})
-        # most_common() : [('AC', 4), ('CD', 3), ('CE', 3), ('DE', 3), ('BC', 2), ('BF', 2), ('BG', 2), ('CF', 2), ('CG', 2), ('FG', 2), ('AD', 2), ('AE', 2), ('AB', 1), ('AF', 1), ('AG', 1), ('AH', 1), ('CH', 1), ('DH', 1), ('EH', 1)]
-        
-        for combi_menu, count in hotCombiMenu:
-            if count > 1 and count == hotCombiMenu[0][1]:
-                result.append(combi_menu)
-        
-    result.sort()
-    return result
+# PROBLEMS 테이블은 문제의 정답과 점수를 담고 있는 테이블입니다. PROBLEMS 테이블의 구조는 다음과 같으며, PROBLEM_ID, CORRECT_ANSWER, SCORE는 각각 문제의 ID, 문제의 정답, 문제를 맞혔을 때 얻는 점수를 나타냅니다.
 
-        
-                
-                
-        
+# 문제
+# 한 번 이상 답을 제출한 모든 유저에 대해 유저의 ID와 획득한 점수 합계, 걸린 시간을 조회하는 SQL문을 작성해주세요.
+# 점수 합계와 걸린 시간을 계산하는 규칙은 다음과 같습니다.
+# 점수 합계
+# 1. 맞힌 문제에 부여된 점수의 총합
+# 2. 한 번이라도 정답을 제출하면 점수를 얻습니다.
+# 3. 한 문제를 여러 번 맞혀도 점수는 한 번만 더합니다.
+# 4. 맞힌 문제가 없다면 점수 합계는 0입니다.
+
+# 걸린 시간
+# 마지막으로 맞힌 문제에 대한 처음 정답을 제출한 시각
+# 한 문제를 여러 번 정답을 제출한 경우 처음 정답을 제출한 시각을 기준으로 합니다.
+# 맞힌 문제가 없다면 걸린 시간은 0입니다.
+# 각 문제에 대해 처음으로 정답을 제출하기 전 틀린 횟수만큼 300초의 추가 페널티를 받습니다.
+# 각 문제에 대해 정답을 제출한 이후에는 틀려도 추가 페널티를 받지 않습니다.
+# 각 문제에 대해 정답을 제출한 적이 없다면 틀려도 추가 페널티를 받지 않습니다.
+# 결과는 점수 합계를 기준으로 내림차순으로 정렬해주세요. 점수 합계가 같다면 걸린 시간을 기준으로 오름차순으로 정렬해주세요. 걸린 시간도 같다면 유저의 ID를 기준으로 오름차순으로 정렬해주세요.
