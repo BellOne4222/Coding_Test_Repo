@@ -1,23 +1,53 @@
-#5
-# SUBMISSIONS 테이블은 유저의 제출 정보를 담고 있는 테이블입니다. SUBMISSIONS 테이블의 구조는 다음과 같으며, ID, USER_ID, PROBLEM_ID, SUBMITTED, TIMESTAMP는 각각 ID, 유저의 ID, 문제의 ID, 제출한 답, 제출한 시각을 나타냅니다.
-# TIMESTAMP는 대회가 시작하고 지난 시간(초)을 나타냅니다.
+import sys
+from itertools import combinations
+from collections import deque
 
-# PROBLEMS 테이블은 문제의 정답과 점수를 담고 있는 테이블입니다. PROBLEMS 테이블의 구조는 다음과 같으며, PROBLEM_ID, CORRECT_ANSWER, SCORE는 각각 문제의 ID, 문제의 정답, 문제를 맞혔을 때 얻는 점수를 나타냅니다.
+n,m = map(int, sys.stdin.readline().split())
 
-# 문제
-# 한 번 이상 답을 제출한 모든 유저에 대해 유저의 ID와 획득한 점수 합계, 걸린 시간을 조회하는 SQL문을 작성해주세요.
-# 점수 합계와 걸린 시간을 계산하는 규칙은 다음과 같습니다.
-# 점수 합계
-# 1. 맞힌 문제에 부여된 점수의 총합
-# 2. 한 번이라도 정답을 제출하면 점수를 얻습니다.
-# 3. 한 문제를 여러 번 맞혀도 점수는 한 번만 더합니다.
-# 4. 맞힌 문제가 없다면 점수 합계는 0입니다.
+graph = [[]*(n+1) for _ in range(n+1)] # # [[], [3], [3, 4, 5], [1, 2], [2], [2]]
 
-# 걸린 시간
-# 마지막으로 맞힌 문제에 대한 처음 정답을 제출한 시각
-# 한 문제를 여러 번 정답을 제출한 경우 처음 정답을 제출한 시각을 기준으로 합니다.
-# 맞힌 문제가 없다면 걸린 시간은 0입니다.
-# 각 문제에 대해 처음으로 정답을 제출하기 전 틀린 횟수만큼 300초의 추가 페널티를 받습니다.
-# 각 문제에 대해 정답을 제출한 이후에는 틀려도 추가 페널티를 받지 않습니다.
-# 각 문제에 대해 정답을 제출한 적이 없다면 틀려도 추가 페널티를 받지 않습니다.
-# 결과는 점수 합계를 기준으로 내림차순으로 정렬해주세요. 점수 합계가 같다면 걸린 시간을 기준으로 오름차순으로 정렬해주세요. 걸린 시간도 같다면 유저의 ID를 기준으로 오름차순으로 정렬해주세요.
+for _ in range(m):
+    start, end = map(int, sys.stdin.readline().split())
+    graph[start].append(end)
+    graph[start].sort()
+    graph[end].append(start)
+    graph[end].sort()
+
+nums = [i for i in range(1,n+1)] 
+chicken_houses = list(combinations(nums,2)) # [(1, 2), (1, 3), (1, 4), (1, 5), (2, 3), (2, 4), (2, 5), (3, 4), (3, 5), (4, 5)]
+
+per_distances = [] 
+# [[0, 0, 0, 1, 1, 1], [0, 0, 1, 0, 2, 2], [0, 0, 1, 1, 0, 2], [0, 0, 1, 1, 2, 0], [0, 1, 0, 0, 1, 1], [0, 2, 0, 1, 0, 1], [0, 2, 0, 1, 1, 0], [0, 1, 1, 0, 0, 2], [0, 1, 1, 0, 2, 0], [0, 3, 1, 2, 0, 0]]
+
+
+for chicken_house in chicken_houses:
+    visited = [False] * (n+1)
+    queue = deque()
+    candidation_1, candidation_2 = chicken_house
+    queue.append([candidation_1,0])
+    queue.append([candidation_2,0])
+    visited[candidation_1] = True
+    visited[candidation_2] = True
+    distances = [0 for _ in range(n+1)]
+    while queue:
+        cur_chicken_house, depth = queue.popleft()
+        
+        if distances[cur_chicken_house] == 0:
+            distances[cur_chicken_house] = depth
+        
+        for next_chicken_house in graph[cur_chicken_house]:
+            if not visited[next_chicken_house]:
+                visited[next_chicken_house] = True
+                queue.append([next_chicken_house,depth+1])
+    
+    per_distances.append(distances)
+
+arr = list(zip(per_distances, chicken_houses))
+arr.sort(key=lambda x: (sum(x[0]),x[1][0],x[1][1]))
+# [([0, 0, 0, 1, 1, 1], (1, 2)), ([0, 1, 0, 0, 1, 1], (2, 3)), ([0, 0, 1, 1, 0, 2], (1, 4)), 
+# ([0, 0, 1, 1, 2, 0], (1, 5)), ([0, 2, 0, 1, 0, 1], (2, 4)), ([0, 2, 0, 1, 1, 0], (2, 5)), 
+# ([0, 1, 1, 0, 0, 2], (3, 4)), ([0, 1, 1, 0, 2, 0], (3, 5)), ([0, 0, 1, 0, 2, 2], (1, 3)), 
+# ([0, 3, 1, 2, 0, 0], (4, 5))]
+
+print("{} {} {}".format(arr[0][1][0], arr[0][1][1], sum(arr[0][0])*2))
+
