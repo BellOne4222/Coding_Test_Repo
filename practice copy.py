@@ -1,44 +1,64 @@
 import sys
+from collections import deque
+    
+r, c = map(int, sys.stdin.readline().split())
 
-def dfs(cur_city, cost, depth):
-    global min_cost
-    global start_city
-    global n
+graph = [list(sys.stdin.readline().rstrip()) for _ in range(r)] 
+# [['#', '#', '#', '#'], ['#', 'J', 'F', '#'], ['#', '.', '.', '#'], ['#', '.', '.', '#']]
+
+graph_visited = [[0]*c for _ in range(r)]
+fire_visited = [[0]*c for _ in range(r)]
+
+fire_queue = deque()
+graph_queue = deque()
+
+for i in range(r):
+    for j in range(len(graph[0])):
+        if graph[i][j] == "J":
+            graph_queue.append([i,j])
+            graph_visited[i][j] = 1
+        if graph[i][j] == "F":
+            fire_queue.append([i,j])
+            fire_visited[i][j] = 1
+        
+        if graph_visited[i][j] == 1 and fire_visited[i][j] == 1:
+            break
+
+dx = [1,-1,0,0]
+dy = [0,0,1,-1]
+
+def bfs():
     
-    # 종료조건
-    if depth == n:
-        for next_city, city_cost in graph[cur_city]:
-            if next_city == start_city:
-                min_cost = min(min_cost, cost + city_cost)
-        return
-    
-    if visited[cur_city]:
-        return
-    
-    visited[cur_city] = True
-    
-    for next_city, city_cost in graph[cur_city]:
-        if not visited[next_city]:
-            dfs(next_city, cost+city_cost, depth + 1)
-            visited[next_city] = False
+    # 불 bfs
+    while fire_queue:
+        cur_x, cur_y = fire_queue.popleft()
+        
+        for i in range(4):
+            nx = cur_x + dx[i]
+            ny = cur_y + dy[i]
             
+            if 0 <= nx < r and 0 <= ny < c: 
+                if not fire_visited[nx][ny] and graph[nx][ny] != "#":
+                    fire_visited[nx][ny] = fire_visited[cur_x][cur_y] + 1
+                    fire_queue.append([nx,ny])
     
+    # 그래프 bfs            
+    while graph_queue:
+        cur_x, cur_y = graph_queue.popleft()
+        
+        for i in range(4):
+            nx = cur_x + dx[i]
+            ny = cur_y + dy[i]
+            
+            if 0 <= nx < r and 0 <= ny < c: 
+                if not graph_visited[nx][ny] and graph[nx][ny] != "#":
+                    if not fire_visited[nx][ny] or fire_visited[nx][ny] > graph_visited[cur_x][cur_y] + 1:
+                        graph_visited[nx][ny] = graph_visited[cur_x][cur_y] + 1
+                        graph_queue.append([nx,ny])
+            
+            else:
+                return graph_visited[cur_x][cur_y]
+    
+    return "IMPOSSIBLE"
 
-n = int(sys.stdin.readline())
-
-cost_graph = [list(map(int, sys.stdin.readline().split())) for _ in range(n)]
-
-graph = [[] for _ in range(4)] 
-# [[[1, 10], [2, 15], [3, 20]], [[0, 5], [2, 9], [3, 10]], [[0, 6], [1, 13], [3, 12]], [[0, 8], [1, 8], [2, 9]]]
-min_cost = float('INF')
-
-for i in range(n):
-    for j in range(n):
-        if cost_graph[i][j] != 0:
-            graph[i].append([j,cost_graph[i][j]])
-
-for k in range(n):
-    visited = [False] * n
-    start_city = k
-    dfs(start_city,0,1)
-
+print(bfs())
