@@ -1,64 +1,29 @@
+#BOJ2138 전구와 스위치 
 import sys
-from collections import deque
-    
-r, c = map(int, sys.stdin.readline().split())
+input = sys.stdin.readline
 
-graph = [list(sys.stdin.readline().rstrip()) for _ in range(r)] 
-# [['#', '#', '#', '#'], ['#', 'J', 'F', '#'], ['#', '.', '.', '#'], ['#', '.', '.', '#']]
+n = int(input())
+light = list(map(int,input().rstrip("\n"))) # 현재
+target = list(map(int,input().rstrip("\n"))) # 목표
 
-graph_visited = [[0]*c for _ in range(r)]
-fire_visited = [[0]*c for _ in range(r)]
+def change(light,target) :
+  count = 0
+  for i in range(1,n) :
+    #이전 전구가 같은 상태인 경우 넘기기 ( greedy )
+    if light[i-1] == target[i-1] : continue
+      
+    #이전 전구가 다른 상태인 경우 스위치 버튼 누르기
+    count += 1
+    for j in range(i-1,i+2) : 
+      if j < n : light[j] = 1 - light[j]
 
-fire_queue = deque()
-graph_queue = deque()
+  return count if light == target else 1e9
 
-for i in range(r):
-    for j in range(len(graph[0])):
-        if graph[i][j] == "J":
-            graph_queue.append([i,j])
-            graph_visited[i][j] = 1
-        if graph[i][j] == "F":
-            fire_queue.append([i,j])
-            fire_visited[i][j] = 1
-        
-        if graph_visited[i][j] == 1 and fire_visited[i][j] == 1:
-            break
+# 첫번째 스위치를 누르지 않은 경우
+ans = change(light[:],target)
 
-dx = [1,-1,0,0]
-dy = [0,0,1,-1]
-
-def bfs():
-    
-    # 불 bfs
-    while fire_queue:
-        cur_x, cur_y = fire_queue.popleft()
-        
-        for i in range(4):
-            nx = cur_x + dx[i]
-            ny = cur_y + dy[i]
-            
-            if 0 <= nx < r and 0 <= ny < c: 
-                if not fire_visited[nx][ny] and graph[nx][ny] != "#":
-                    fire_visited[nx][ny] = fire_visited[cur_x][cur_y] + 1
-                    fire_queue.append([nx,ny])
-    
-    # 그래프 bfs            
-    while graph_queue:
-        cur_x, cur_y = graph_queue.popleft()
-        
-        for i in range(4):
-            nx = cur_x + dx[i]
-            ny = cur_y + dy[i]
-            
-            if 0 <= nx < r and 0 <= ny < c: 
-                if not graph_visited[nx][ny] and graph[nx][ny] != "#":
-                    if not fire_visited[nx][ny] or fire_visited[nx][ny] > graph_visited[cur_x][cur_y] + 1:
-                        graph_visited[nx][ny] = graph_visited[cur_x][cur_y] + 1
-                        graph_queue.append([nx,ny])
-            
-            else:
-                return graph_visited[cur_x][cur_y]
-    
-    return "IMPOSSIBLE"
-
-print(bfs())
+# 첫번째 스위치를 누른 경우
+light[0] = 1 - light[0]
+light[1] = 1 - light[1]
+ans = min(ans,change(light[:],target)+1) # 두 경우 중 최솟값 구하기
+print( ans if ans != 1e9 else -1)
