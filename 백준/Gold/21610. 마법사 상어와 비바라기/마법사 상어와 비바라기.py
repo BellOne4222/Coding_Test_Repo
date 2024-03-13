@@ -41,7 +41,7 @@ for _ in range(M):
     # 구름 생성 및 물의 양 조정
     for i in range(N):
         for j in range(N):
-            # 바구니에 저장된 물의 양이 2 이상이고, 방문하지 않은 칸인 경우
+            # 바구니에 저장된 물의 양이 2 이상이고, 방00문하지 않은 칸인 경우
             if basket[i][j] >= 2 and not visited[i][j]:
                 basket[i][j] -= 2  # 물의 양 2 감소
                 cloud.append([i, j])  # 새로운 구름 생성
