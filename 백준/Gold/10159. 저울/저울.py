@@ -38,3 +38,6 @@ for i in range(1, N+1):
         if not arr[i][j] and not arr[j][i]:
             count += 1
     print(count)
+
+# 플로이드-워셜 알고리즘을 사용하여 간접적인 비교 결과까지 계산한 후, 
+# 각 물건에 대해 비교 결과를 알 수 없는 다른 물건의 개수를 계산하여 출력합니다.
