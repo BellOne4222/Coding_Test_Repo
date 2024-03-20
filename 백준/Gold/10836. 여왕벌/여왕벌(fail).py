@@ -1,30 +1,51 @@
 import sys
 
-M,N=map(int,input().split())
+n,m = map(int, sys.stdin.readline().split())
 
-L=[[1 for j in range(M)] for i in range(M)]
-day=[0 for i in range(2*M-1)]
+graph = [[[] for _ in range(n)] for _ in range(n)]
 
+plus = [0,1,2]
 
+dx = [0,-1,-1]
+dy = [-1,-1,0]
 
-for _ in range(N):
-    z,o,t=map(int,sys.stdin.readline().rstrip().split())
-    for i in range(z,z+o):
-        day[i]+=1
-    for i in range(z+o,2*M-1):
-        day[i]+=2
+for _ in range(m):
+    plus_lst = list(map(int, sys.stdin.readline().split()))
+    idx = 0
+    for k in range(len(plus_lst)):
+        if plus_lst[k] != 0:
+            idx = k
+            break
+        
+    for i in reversed(range(n)):
+        if plus_lst[idx] == 0:
+            idx += 1
+        
+        graph[i][0].append(plus[idx])
+        plus_lst[idx] = plus_lst[idx] - 1
+    
+    for j in range(1,n):
+        if plus_lst[idx] == 0:
+            idx += 1
+        
+        graph[0][j].append(plus[idx])
+        plus_lst[idx] = plus_lst[idx] - 1
+    
+for l in range(n):
+    for o in range(n):
+        if l == 0:
+            graph[l][o] = sum(graph[l][o]) + 1
+        elif l != 0 and o == 0:
+            graph[l][o] = sum(graph[l][o]) + 1
+        else:
+            graph[l][o] = graph[l-1][o]
+            
+            
 
-#왼쪽꺼
-for i in range(M-1,-1,-1):
-    L[i][0]+=day[M-1-i]
-#위쪽
-for j in range(1,M):
-    L[0][j]+=day[M-1+j]
+print(graph)
 
-#1열 이후라인
-for j in range(1,M):
-    for i in range(1,M):
-        L[i][j]=L[i-1][j]
+for q in range(n):
+    for r in range(n):
+        print(graph[q][r], end=" ")
+    print()
 
-for i in L:
-    print(*i)
