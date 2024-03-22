@@ -13,6 +13,6 @@ for i in range(N) :  # 모든 학생에 대해 반복
       for j in block_list[i] :  # 해당 학생이 가진 모든 블록(높이)에 대해 반복
         if h + j <= H :  # 현재 블록을 추가했을 때 탑의 높이가 H를 넘지 않는다면,
           # dp_table[i+1][h+j]를 업데이트: i+1번째 학생까지 고려한 상태에서 높이 h+j를 만들 수 있는 경우의 수를 증가
-          dp_table[i+1][h + j] = (dp_table[i][h] + dp_table[i+1][h + j] )  # 모듈로 연산 적용
+          dp_table[i+1][h + j] = (dp_table[i][h] + dp_table[i+1][h + j] )  # 모듈`로 연산 적용
 
 print(dp_table[-1][-1] % 10007)  # 모든 학생을 고려한 후, 높이 H를 만들 수 있는 경우의 수 출력, 10007로 나눈 나머지
