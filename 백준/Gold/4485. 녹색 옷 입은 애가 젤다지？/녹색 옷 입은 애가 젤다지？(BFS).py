@@ -1,47 +1,34 @@
-# 표준 입력으로부터 읽기 위한 입력 설정
-import sys
-import heapq  # 우선순위 큐 구현을 위한 heapq 라이브러리
+from collections import deque
 
-input = sys.stdin.readline
+dx = [-1, 1, 0, 0]  # x축 이동을 위한 리스트
+dy = [0, 0, 1, -1]  # y축 이동을 위한 리스트
 
-n = int(input())
-dx = [0, 1, -1, 0]  # x 방향 이동 (오른쪽, 왼쪽)
-dy = [1, 0, 0, -1]  # y 방향 이동 (아래, 위)
-# 문제 인스턴스를 번호 매기기 위한 카운터
-cnt = 0
-# 0이 입력될 때까지 반복하여 입력의 끝을 나타냄
-while n != 0:
-    cnt += 1  # 문제 카운터 증가
-    # N x N 동굴 지도를 읽어들임, 각 셀에는 도둑루피의 양이 표시됨
-    board = [list(map(int, input().split())) for _ in range(n)]
-    # 최소 비용 경로를 기반으로 탐색을 관리하기 위한 우선순위 큐
-    heap = []
-    # 각 셀에 도달하기 위한 최소 비용을 추적하는 거리 테이블
-    dist = [[1e9] * n for _ in range(n)]
-    # 시작 지점과 그 초기 비용을 설정
-    dist[0][0] = board[0][0]
-    # 힙에 시작 셀과 그 비용을 푸시
-    heapq.heappush(heap, (board[0][0], 0, 0))
-
-    while heap:
-        # 가장 낮은 비용의 셀을 팝
-        distance, y, x = heapq.heappop(heap)
-
-        # 목표에 도달하면 결과를 출력하고 다음 케이스를 위해 리셋
-        if y == n-1 and x == n-1:
-            print("Problem", str(cnt)+":", distance)
-            n = int(input())  # 다음 동굴의 크기를 읽음
-            break
-        # 인접한 셀을 탐색 (위, 아래, 왼쪽, 오른쪽)
-        for i in range(4):
-            ny = y + dy[i]
+# 너비 우선 탐색(BFS) 함수
+def bfs(i, j, graph, costs):
+    queue = deque()
+    queue.append((i, j))
+    while queue:
+        x, y = queue.popleft()
+        for i in range(4):  # 현재 위치에서 4가지 방향으로의 이동 시도
             nx = x + dx[i]
+            ny = y + dy[i]
+            # 다음 위치가 동굴 범위 내에 있고, 다음 위치로 이동했을 때의 비용이 현재까지의 비용보다 적을 경우
+            if 0 <= nx < n and 0 <= ny < n:
+                if costs[nx][ny] > costs[x][y] + graph[nx][ny]:
+                    costs[nx][ny] = costs[x][y] + graph[nx][ny]
+                    queue.append((nx, ny))
 
-            # 유효한 셀 좌표를 확인
-            if 0 <= ny < n and 0 <= nx < n:
-                cost = distance + board[ny][nx]  # 이 셀에 도달하기 위한 새로운 비용 계산
-                # 새로운 비용이 더 낮은 경우 셀의 비용을 업데이트
-                if dist[ny][nx] > cost:
-                    dist[ny][nx] = cost
-                    # 업데이트된 셀을 힙에 푸시
-                    heapq.heappush(heap, (cost, ny, nx))
+count = 1
+while True:
+    n = int(input())  # 동굴의 크기
+    if n == 0:  # 입력 종료 조건
+        break
+    graph = []  # 동굴의 각 칸에 있는 도둑루피 크기를 저장할 리스트
+    costs = [[int(1e9)] * n for _ in range(n)]  # 각 칸까지 이동하는데 필요한 최소 비용
+    for _ in range(n):
+        graph.append(list(map(int, input().split())))
+
+    costs[0][0] = graph[0][0]  # 시작점의 비용 초기화
+    bfs(0, 0, graph, costs)  # BFS를 통한 최소 비용 계산
+    print(f'Problem {count}: {costs[n - 1][n - 1]}')  # 최소 비용 출력
+    count += 1
