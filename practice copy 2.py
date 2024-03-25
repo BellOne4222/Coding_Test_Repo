@@ -24,29 +24,20 @@ for _ in range(student_num):
                 turn_switch(i)
     
     elif male == 2:
-        cur_switch = switches[given_num]
+        turn_switch(given_num)
         left_idx = given_num - 1
         right_idx = given_num + 1
         
         while True:
-            if left_idx > 0 and right_idx < (switch_num + 1):
-                if switches[left_idx] == switches[right_idx]:
-                    turn_switch(left_idx)
-                    turn_switch(right_idx)
-                    left_idx -= 1
-                    right_idx += 1
-                
-                else:
-                    turn_switch(given_num)
-                    break
+            if left_idx > 0 and right_idx <= switch_num and switches[left_idx] == switches[right_idx]:
+                turn_switch(left_idx)
+                turn_switch(right_idx)
             else:
-                turn_switch(given_num)
                 break
+            left_idx -= 1
+            right_idx += 1
 
-result_idx = 1
-while result_idx <= switch_num:
-    print(switches[result_idx], end=" ")
-    result_idx += 1
-    
-    if result_idx % 20 == 0:
+for i in range(1, switch_num+1):
+    print(switches[i], end = " ")
+    if i % 20 == 0 :
         print()
