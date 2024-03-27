@@ -1,55 +1,31 @@
 import sys
 
-def turn_switch(idx):
-  if switches[idx] == 0:
-    switches[idx] = 1
-  elif switches[idx] == 1:
-    switches[idx] = 0
+n = int(sys.stdin.readline())  # 선분의 개수 N을 입력받습니다.
 
+line_lst = []  # 선분을 저장할 리스트입니다.
 
-switch_num = int(sys.stdin.readline())
-
-origin_switches = [-1]
-
-switches = origin_switches + list(map(int, sys.stdin.readline().split()))
-
-student_num = int(sys.stdin.readline())
-
-for _ in range(student_num):
-  male, given_num = map(int, sys.stdin.readline().split())
+for _ in range(n):
+  cur_line = list(map(int, sys.stdin.readline().split()))  # 현재 선분의 시작점과 끝점을 입력받습니다.
   
-  if male == 1:
-    for i in range(0, switch_num, given_num):
-      if i != 0 and i % given_num == 0:
-        turn_switch(i)
-  
-  elif male == 2:
-    cur_switch = switches[given_num]
-    left_idx = given_num - 1
-    right_idx = given_num + 1
+  if not line_lst:  # 선분 리스트가 비어있다면, 현재 선분을 리스트에 추가합니다.
+    line_lst.append(cur_line)
     
-    while True:
-      if left_idx > 0 and right_idx < (switch_num + 1):
-        if switches[left_idx] == switches[right_idx]:
-          turn_switch(left_idx)
-          turn_switch(right_idx)
-          left_idx -= 1
-          right_idx += 1
-        
-        else:
-          turn_switch(given_num)
-          break
-      else:
-        turn_switch(given_num)
-        break
-
-result_idx = 1
-while result_idx <= switch_num:
-  print(switches[result_idx], end=" ")
-  result_idx += 1
+  else:
+    if line_lst[-1][1] >= cur_line[0]:  # 현재 선분의 시작점이 마지막에 저장된 선분의 끝점보다 작거나 같으면, 겹치는 부분이 있습니다.
+      if cur_line[1] > line_lst[-1][1]:  # 현재 선분의 끝점이 마지막에 저장된 선분의 끝점보다 크다면, 끝점을 업데이트합니다.
+        line_lst[-1][1] = cur_line[1]
+      else:  # 그렇지 않으면, 현재 선분은 완전히 포함되므로 추가 작업 없이 계속합니다.
+        continue
+    else:  # 겹치지 않는 새로운 선분이면, 리스트에 추가합니다.
+      line_lst.append(cur_line)
   
-  if result_idx % 20 == 0:
-    print()
+total_length = 0  # 선분들의 총 길이를 저장할 변수입니다.
+
+for i in line_lst:  # 최종적으로 겹치지 않는 선분들만 남게 됩니다. 이 선분들의 길이를 합산합니다.
+  total_length += (abs(i[1]-i[0]))  # 각 선분의 길이(끝점 - 시작점)를 총 길이에 더합니다.
+
+print(total_length)  # 선분들의 총 길이를 출력합니다.
+
   
 
     
