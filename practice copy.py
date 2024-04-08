@@ -1,55 +1,33 @@
-# 참고 : https://dev-scratch.tistory.com/m/133
-
 import sys
+
+# 입력을 더 빠르게 받기 위해 sys.stdin.readline을 사용
 input = sys.stdin.readline
 
-def rotate(s):
-    # 스티커를 시계 방향으로 90도 회전시키는 함수
-    s = zip(*s[::-1])
-    return [list(e) for e in s]
+# dp[n][k][l]을 사용하여, 길이가 n이며, 인접한 비트의 개수가 k이고, 마지막 비트가 l인 수열의 개수를 저장
+dp = [[[0 for _ in range(2)] for _ in range(101)] for _ in range(101)]
+dp[1][0][0] = 1  # 길이가 1이고, 인접한 비트가 0개이며, 마지막 비트가 0인 수열의 개수는 1
+dp[1][0][1] = 1  # 길이가 1이고, 인접한 비트가 0개이며, 마지막 비트가 1인 수열의 개수도 1
 
-def put(sticker):
-    # 스티커를 노트북에 붙일 수 있는지 확인하고, 붙일 수 있다면 노트북에 붙이는 함수
-    sr, sc = len(sticker), len(sticker[0])
+# DP 배열을 채움
+for k in range(101):  # 인접한 비트의 개수
+    for n in range(2, 101):  # 수열의 길이
+        if k == 0:
+            dp[n][k][1] = dp[n-1][k][0]  # 마지막이 1로 끝나며, 인접한 비트가 없는 경우는 이전의 마지막이 0인 경우만 해당
+        else:
+            # 마지막이 1로 끝나며, 인접한 비트가 k개 있는 경우는,
+            # 이전에 1로 끝나고, 인접한 비트가 k-1개 있던 경우와
+            # 이전에 0으로 끝나고, 인접한 비트가 k개 있던 경우의 합
+            dp[n][k][1] = dp[n-1][k-1][1] + dp[n-1][k][0]
+        # 마지막이 0으로 끝나는 경우는, 이전이 0 또는 1로 끝났든 상관 없이 합산
+        dp[n][k][0] = dp[n-1][k][0] + dp[n-1][k][1]
 
-    for x in range(n - sr + 1):
-        for y in range(m - sc + 1):
-            if compare(x, y, sr, sc, sticker):
-                # 스티커를 붙일 수 있는 위치를 찾았다면, 실제로 붙임
-                for sx in range(sr):
-                    for sy in range(sc):
-                        laptop[x + sx][y + sy] += sticker[sx][sy]
-                return True
+# 테스트 케이스의 개수 T를 입력받음
+T = int(input())
+results = []
+for _ in range(T):
+    N, K = map(int, input().split())  # 각 테스트 케이스에 대한 n과 k 값을 입력받음
+    result = dp[N][K][0] + dp[N][K][1]  # 길이가 N이고, 인접한 비트의 개수가 K인 수열의 총 개수를 계산
+    results.append(result)  # 결과를 results 리스트에 추가
 
-    return False
-
-def compare(x, y, sr, sc, sticker):
-    # 스티커를 특정 위치에 붙일 수 있는지 없는지를 확인하는 함수
-    for sx in range(sr):
-        for sy in range(sc):
-            if laptop[x + sx][y + sy] == sticker[sx][sy] == 1:
-                # 노트북과 스티커가 겹치는 부분이 있으면 False 반환
-                return False
-
-    return True
-
-n, m, k = map(int, input().split())
-
-laptop = [[0] * m for _ in range(n)] # 노트북을 0으로 초기화
-stickers = [] # 스티커들을 저장할 리스트
-
-for _ in range(k):
-    r, c = map(int, input().split())
-    sticker = [list(map(int, input().split())) for _ in range(r)]
-    stickers.append(sticker) # 스티커 정보 입력 받기
-
-for sticker in stickers:
-    for i in range(4):
-        if put(sticker):
-            # 스티커를 붙일 수 있으면 다음 스티커로 넘어감
-            break
-        sticker = rotate(sticker) # 스티커를 회전시키고 다시 시도
-
-cnt = sum(map(sum, laptop)) # 노트북에 붙은 스티커의 총 칸 수 계산
-
-print(cnt) # 결과 출력
+# 결과를 출력
+print('\n'.join(map(str, results)))
