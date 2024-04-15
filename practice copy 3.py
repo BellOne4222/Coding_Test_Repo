@@ -1,55 +1,39 @@
 import sys
+from collections import deque
 
-def turn_switch(idx):
-    if switches[idx] == 0:
-        switches[idx] = 1
-    elif switches[idx] == 1:
-        switches[idx] = 0
-
-
-switch_num = int(sys.stdin.readline())
-
-origin_switches = [-1]
-
-switches = origin_switches + list(map(int, sys.stdin.readline().split()))
-
-student_num = int(sys.stdin.readline())
-
-for _ in range(student_num):
-    male, given_num = map(int, sys.stdin.readline().split())
+def bfs(start,end):
+    queue = deque()
+    queue.append(start)
+    visited[start] = True
     
-    if male == 1:
-        for i in range(0, switch_num, given_num):
-            if i != 0 and i % given_num == 0:
-                turn_switch(i)
-    
-    elif male == 2:
-        cur_switch = switches[given_num]
-        left_idx = given_num - 1
-        right_idx = given_num + 1
-        
-        while True:
-            if left_idx > 0 and right_idx < (switch_num + 1):
-                if switches[left_idx] == switches[right_idx]:
-                    turn_switch(left_idx)
-                    turn_switch(right_idx)
-                    left_idx -= 1
-                    right_idx += 1
-                
-                else:
-                    turn_switch(given_num)
-                    break
-            else:
-                turn_switch(given_num)
-                break
+    while queue:
+        cur = queue.popleft()
+        print(cur, end=" ")
+        for j in graph[cur]:
+            if not visited[j]:
+                visited[j] = True
+                queue.append(j)
+            
 
-result_idx = 1
-while result_idx <= switch_num:
-    print(switches[result_idx], end=" ")
-    result_idx += 1
-    
-    if result_idx % 20 == 0:
-        print()
-  
+road_dict = {}
 
+n,m = map(int, sys.stdin.readline().split())
+graph = [[] for _ in range(n+1)]
+
+
+for _ in range(m):
+    start, end, cost = map(int, sys.stdin.readline().split())
+    road = str(start) + str(end)
+    road_rev = str(end) + str(start)
+    road_dict[road] = cost
+    road_dict[road_rev] = cost
     
+    graph[start].append(end)
+    graph[end].append(start)
+
+for i in graph:
+    i.sort()
+
+visited = [False] * (n + 1)
+
+bfs(1,n)
