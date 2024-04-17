@@ -30,7 +30,7 @@ for _ in range(m):
     start,end,cost = map(int,sys.stdin.readline().split())
     graph[start].append((end,cost))
 
-result = dijkstra(2)
+result = dijkstra(x)
 result[0] = 0
 
 
