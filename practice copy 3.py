@@ -1,42 +1,126 @@
 import sys
-import heapq
+from collections import deque
 
-def dijkstra(start):
-    # 우선순위 큐(힙) 초기화
-    heap = []
-    heapq.heappush(heap, (0, start))  # 시작 노드와 비용을 힙에 추가
-    distance[start] = 0  # 시작점의 최소 비용을 0으로 설정
+def move_dice(dice, direction):
+    new_dice = [0] * 6
     
-    # 힙에 원소가 있는 동안 반복
-    while heap:
-        cur_cost, cur_node = heapq.heappop(heap)  # 현재 비용이 가장 낮은 노드 선택
+    if direction == 0:  # 동쪽
+        new_dice[0] = dice[3]
+        new_dice[1] = dice[1]
+        new_dice[2] = dice[0]
+        new_dice[3] = dice[5]
+        new_dice[4] = dice[4]
+        new_dice[5] = dice[2]
         
-        # 현재 노드의 처리된 최소 비용이 이미 현재 비용보다 작은 경우, 스킵
-        if distance[cur_node] < cur_cost:
-            continue
+    elif direction == 1:  # 서쪽
+        new_dice[0] = dice[2]
+        new_dice[1] = dice[1]
+        new_dice[2] = dice[5]
+        new_dice[3] = dice[0]
+        new_dice[4] = dice[4]
+        new_dice[5] = dice[3]
         
-        # 현재 노드와 연결된 모든 노드를 순회
-        for next_node, cost in graph[cur_node]:
-            new_cost = cur_cost + cost  # 다음 노드로의 새로운 총 비용 계산
-            # 새로운 총 비용이 기존에 계산된 비용보다 작은 경우, 업데이트 및 힙에 추가
-            if new_cost < distance[next_node]:
-                distance[next_node] = new_cost
-                heapq.heappush(heap, (new_cost, next_node))
+        
+    elif direction == 2:  # 남쪽
+        new_dice[0] = dice[1]
+        new_dice[1] = dice[5]
+        new_dice[2] = dice[2]
+        new_dice[3] = dice[3]
+        new_dice[4] = dice[0]
+        new_dice[5] = dice[4]
+        
+    elif direction == 3:  # 북쪽
+        new_dice[0] = dice[4]
+        new_dice[1] = dice[0]
+        new_dice[2] = dice[2]
+        new_dice[3] = dice[3]
+        new_dice[4] = dice[5]
+        new_dice[5] = dice[1]
+        
+    return new_dice
 
+n,m,k = map(int, sys.stdin.readline().strip().split())
+graph = [list(map(int, sys.stdin.readline().strip().split())) for _ in range(n)] 
 
-# 입력 처리
-n, m = map(int, sys.stdin.readline().split())  # 노드와 간선의 수 입력 받기
-graph = [[] for _ in range(n + 1)]  # 각 노드에 연결된 간선 정보를 저장할 리스트 초기화
-distance = [float('inf')] * (n + 1)  # 각 노드까지의 최소 비용을 무한대로 초기화
+total_score = 0
 
-# 각 간선 정보 입력 받기
-for _ in range(m):
-    start, end, cost = map(int, sys.stdin.readline().split())
-    graph[start].append((end, cost))  # 시작점에서 도착점까지 비용을 그래프에 추가
-    graph[end].append((start, cost))  # 양방향 그래프이므로 반대 방향도 추가
+cur_dice = [1,2,3,4,5,6]
+cur_x, cur_y = 0,0
+cur_direction = 0 # 동쪽
 
-# 다익스트라 알고리즘 실행
-dijkstra(1)
+move_cnt = 0
 
-# 결과 출력
-print(distance[n])  # 1번 노드에서 n번 노드까지의 최소 비용 출력
+# 동서남북 이동
+dx = [0,0,1,-1]
+dy = [1,-1,0,0]
+
+while move_cnt < k:
+    
+    # 1. 주사위가 이동 방향으로 한 칸 굴러간다.
+    next_x, next_y = cur_x + dx[cur_direction], cur_y + dy[cur_direction]
+       
+    # 1-1. 만약, 이동 방향에 칸이 없다면, 이동 방향을 반대로 한 다음 한 칸 굴러간다.
+    if next_x < 0 or next_y < 0 or next_x >= n or next_y >= m:
+        if cur_direction == 0:
+            cur_direction = 1
+        elif cur_direction == 1:
+            cur_direction = 0
+        elif cur_direction == 2:
+            cur_direction = 3
+        else:
+            cur_direction = 2
+        continue
+    
+    move_cnt += 1
+    
+    new_dice = move_dice(cur_dice, cur_direction)
+    
+    queue = deque()
+    visited = [[False for _ in range(m)] for _ in range(n)]
+    queue.append([next_x, next_y])
+    visited[next_x][next_y] = True
+    c = 1
+    
+    while queue:
+        cur_bfs_x, cur_bfs_y = queue.popleft()
+        
+        for i in range(4):
+            nx = cur_bfs_x + dx[i]
+            ny = cur_bfs_y + dy[i]
+            
+            if 0 <= nx < n and 0 <= ny < m:
+                b = graph[next_x][next_y]
+                if not visited[nx][ny]:
+                    if b == graph[nx][ny]:
+                        queue.append([nx,ny])
+                        visited[nx][ny] = True
+                        c += 1
+    
+    total_score += (b * c)
+    
+    a = new_dice[5]
+    b = graph[next_x][next_y]
+    
+    if a > b:
+        if cur_direction == 0:
+            cur_direction = 2
+        elif cur_direction == 1:
+            cur_direction = 3
+        elif cur_direction == 2:
+            cur_direction = 1
+        elif cur_direction == 3:
+            cur_direction = 0
+    elif a < b:
+        if cur_direction == 0:
+            cur_direction = 3
+        elif cur_direction == 1:
+            cur_direction = 2
+        elif cur_direction == 2:
+            cur_direction = 0
+        elif cur_direction == 3:
+            cur_direction = 1
+    
+    cur_x, cur_y, cur_dice = next_x, next_y, new_dice
+
+print(total_score)
+        
