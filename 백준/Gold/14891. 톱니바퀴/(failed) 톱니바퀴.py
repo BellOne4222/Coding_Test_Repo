@@ -1,3 +1,5 @@
+# 예제 3,4번 통과 x
+
 import sys
 from collections import deque
 
@@ -114,8 +116,3 @@ for w in range(4):
     score *= 2
 
 print(total_score)
-    
-    
-    
-    
-    
