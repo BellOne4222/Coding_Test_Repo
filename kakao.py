@@ -1,27 +1,46 @@
-from itertools import combinations
-from collections import Counter
+import sys
 
-def solution(orders, course):    
-    
-    result = []
-    
-    for num in course:
-        combinationMenus = []
-        for order in orders:
-            for i in combinations(order, num):
-                combiMenu = ''.join(i)
-                combinationMenus.append(combiMenu)
-        hotCombiMenu = Counter(combinationMenus).most_common() # Counter({'AC': 4, 'CD': 3, 'CE': 3, 'DE': 3, 'BC': 2, 'BF': 2, 'BG': 2, 'CF': 2, 'CG': 2, 'FG': 2, 'AD': 2, 'AE': 2, 'AB': 1, 'AF': 1, 'AG': 1, 'AH': 1, 'CH': 1, 'DH': 1, 'EH': 1})
-        # most_common() : [('AC', 4), ('CD', 3), ('CE', 3), ('DE', 3), ('BC', 2), ('BF', 2), ('BG', 2), ('CF', 2), ('CG', 2), ('FG', 2), ('AD', 2), ('AE', 2), ('AB', 1), ('AF', 1), ('AG', 1), ('AH', 1), ('CH', 1), ('DH', 1), ('EH', 1)]
-        
-        for combi_menu, count in hotCombiMenu:
-            if count > 1 and count == hotCombiMenu[0][1]:
-                result.append(combi_menu)
-        
-    result.sort()
-    return result
+n = int(sys.stdin.readline().rstrip())
 
+a = list(map(int, sys.stdin.readline().split()))
+
+left_dp_table = [0] * (n)
+right_dp_table = [0] * (n)
+
+
+# left 
+for i in reversed(range(n)):
+    cnt = 1
+    num = []
+    for j in range(i):
+        if a[i] > a[j]:
+            if a[j] not in num:
+                num.append(a[j])
+                cnt += 1
+        else:
+            continue
+    
+    left_dp_table[i] = max(cnt, left_dp_table[i])
         
-                
-                
         
+
+
+# right
+for k in range(n):
+    compare = a[k]
+    cnt = 1
+    num = []
+    for l in reversed(range(k,n)):
+        com = a[l]
+        if a[k] > a[l]:
+            if a[l] not in num:
+                num.append(a[l])
+                cnt += 1
+    
+    right_dp_table[k] = max(cnt, right_dp_table[k])
+
+left_max_idx = left_dp_table.index(max(left_dp_table))
+right_max_idx = (n - 1 - right_dp_table.index(max(right_dp_table)))
+
+print(left_dp_table[left_max_idx] + right_dp_table[right_max_idx])
+    
