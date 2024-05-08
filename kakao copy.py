@@ -1,32 +1,24 @@
-from collections import deque
+import sys
 
-def solution(edges):
-    # 정점의 번호, 도넛, 막대, 8자
+n = int(sys.stdin.readline().rstrip())
+a = list(map(int, sys.stdin.readline().split()))
 
-    v = max(max(edges))
+increase = [1] * n
+decrease = [1] * n
 
-    visited = [False] * (v+1)
 
-    graph = [[] for _ in range(v+1)] # [[], [1, 1, 2], [3, 1], [2, 4], [3]]
+for i in range(n):
+    for j in range(i):
+        if a[j] < a[i]:
+            increase[i] = max(increase[i], increase[j] + 1)
 
-    for i in range(len(edges)):
-        start, end = edges[i][0], edges[i][1]
-        graph[start].append(end)
-        graph[end].append(start)
-    
+for i in reversed(range(n)):
+    for j in range(i + 1, n):
+        if a[j] < a[i]:
+            decrease[i] = max(decrease[i], decrease[j] + 1)
 
-    def bfs(vertex):
-        queue = deque()
-        visited[vertex] = True
+max_length = 0
+for i in range(n):
+    max_length = max(max_length, increase[i] + decrease[i] - 1)
 
-        while queue:
-            v = queue.popleft()
-            print(v, end = " ")
-            for i in graph[v]:
-                if not visited[i]:
-                    visited[i] = True
-                    queue.append(i)
-    
-    bfs(edges[0][0])
-
-print(solution([[2, 3], [4, 3], [1, 1], [2, 1]]))
+print(max_length)
