@@ -1,23 +1,22 @@
-H, W = map(int, input().split())
-N = int(input())
-stickers = [tuple(map(int, input().split())) for _ in range(N)]
+import sys
+from itertools import combinations
 
-max_area = 0
+N, S = map(int, sys.stdin.readline().split())
 
-for i in range(N):
-    for j in range(i + 1, N):
-        R1, C1 = stickers[i]
-        R2, C2 = stickers[j]
+nums = list(map(int, sys.stdin.readline().split()))
 
-        for (r1, c1) in [(R1, C1), (C1, R1)]:
-            for (r2, c2) in [(R2, C2), (C2, R2)]:
-                if (r1 + r2 <= H and max(c1, c2) <= W) or (c1 + c2 <= W and max(r1, r2) <= H):
-                    max_area = max(max_area, r1 * c1 + r2 * c2)
-                if (r1 + c2 <= H and max(c1, r2) <= W) or (c1 + r2 <= W and max(r1, c2) <= H):
-                    max_area = max(max_area, r1 * c1 + r2 * c2)
-                if (c1 + r2 <= H and max(r1, c2) <= W) or (r1 + c2 <= W and max(c1, r2) <= H):
-                    max_area = max(max_area, r1 * c1 + r2 * c2)
-                if (c1 + c2 <= H and max(r1, r2) <= W) or (r1 + r2 <= W and max(c1, c2) <= H):
-                    max_area = max(max_area, r1 * c1 + r2 * c2)
+cnt = 0
 
-print(max_area)
+for i in range(1, N+1):
+    comb_nums = list(combinations(nums, i))
+    
+    for j in comb_nums:
+        if len(j) < 0:
+            continue
+        else:
+            if sum(j) == S:
+                cnt += 1
+
+print(cnt)
+
+
