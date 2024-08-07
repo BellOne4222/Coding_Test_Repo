@@ -1,22 +1,15 @@
 import sys
-from itertools import combinations
+from itertools import permutations
 
-N, S = map(int, sys.stdin.readline().split())
+nums = []
 
-nums = list(map(int, sys.stdin.readline().split()))
+for _ in range(5):
+    nums += sys.stdin.readline().split()
 
-cnt = 0
+comb_nums = list(permutations(nums, 6))
 
-for i in range(1, N+1):
-    comb_nums = list(combinations(nums, i))
-    
-    for j in comb_nums:
-        if len(j) < 0:
-            continue
-        else:
-            if sum(j) == S:
-                cnt += 1
+comb_nums = set(comb_nums)
 
-print(cnt)
+print(comb_nums)
 
 
