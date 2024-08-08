@@ -1,3 +1,6 @@
+import sys
+from itertools import permutations
+
 def check(ineqs, nums):
     for i in range(len(ineqs)):
         if ineqs[i] == '<' and nums[i] > nums[i + 1]:
@@ -10,8 +13,6 @@ def find_numbers(ineqs, k):
     max_num = ""
     min_num = ""
     
-    from itertools import permutations
-    
     for perm in permutations(range(10), k + 1):
         if check(ineqs, perm):
             num = ''.join(map(str, perm))
@@ -22,15 +23,12 @@ def find_numbers(ineqs, k):
     
     return max_num, min_num
 
-# 입력 받기
-import sys
-input = sys.stdin.read
-data = input().split()
+k = int(sys.stdin.readline())
 
-k = int(data[0])
-inequalities = data[1:]
+inequalitys = list(map(str, sys.stdin.readline().split()))
 
-max_result, min_result = find_numbers(inequalities, k)
+max_result, min_result = find_numbers(inequalitys, k)
 
 print(max_result)
 print(min_result)
+             

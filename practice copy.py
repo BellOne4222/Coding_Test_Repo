@@ -1,31 +1,57 @@
 import sys
+from collections import deque
 
-def dfs(x,y,nums):
-    if len(nums) == 6:
-        if nums not in comb_nums:
-            comb_nums.append(nums)
-        return 
+k = int(sys.stdin.readline())
+
+inequalitys = list(map(str, sys.stdin.readline().split()))
+
+max_answer = []
+min_answer = []
+
+max_nums = [i for i in reversed(range(10))]
+
+min_nums = [j for j in range(10)]
+max_idx = 0
+min_idx = 0
+i_idx = 0
+
+compare = deque()
+
+while len(max_answer) < k+1:
+    if max_idx == 0 and i_idx == 0:
+        if inequalitys[i_idx] == "<":
+            pass
+        else:
+            max_answer.append(max_nums[max_idx])
+            max_idx += 1
+            i_idx += 1
     
-    dx = [1,-1,0,0]
-    dy = [0,0,1,-1]
-    
-    for i in range(4):
-        nx = x + dx[i]
-        ny = y + dy[i]
+    else:
+        if inequalitys[i_idx-1] == "<":
+            if inequalitys[i_idx] == "<":
+                compare.appendleft(max_nums[max_idx])
+                i_idx += 1
+                max_idx += 1
+            else:
+                for num in compare:
+                    max_answer.append(num)
+                max_answer.append(max_nums[max_idx])
+                max_idx += 1
+                i_idx += 1
+        else:
+            if inequalitys[i_idx] == ">":
+                max_answer.append(max_nums[max_idx])
+                max_idx += 1
+                i_idx += 1
+            else:
+                compare.appendleft(max_nums[max_idx])
+                max_idx += 1
+                compare.appendleft(max_nums[max_idx])
+                i_idx += 1
         
-        if 0 <= nx < 5 and 0 <= ny < 5:
-            nums.append(board[nx][ny])
-            dfs(nx, ny, nums)
+
+print(max_nums)            
+            
+            
+        
     
-
-board = [list(map(int, sys.stdin.readline().split())) for _ in range(5)]
-
-comb_nums = []
-
-for i in range(5):
-    for j in range(5):
-        nums = []
-        nums.append(board[i][j])
-        dfs(i,j,nums)
-
-print(comb_nums)
