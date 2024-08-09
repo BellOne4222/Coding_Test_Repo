@@ -1,57 +1,35 @@
 import sys
-from collections import deque
 
-k = int(sys.stdin.readline())
-
-inequalitys = list(map(str, sys.stdin.readline().split()))
-
-max_answer = []
-min_answer = []
-
-max_nums = [i for i in reversed(range(10))]
-
-min_nums = [j for j in range(10)]
-max_idx = 0
-min_idx = 0
-i_idx = 0
-
-compare = deque()
-
-while len(max_answer) < k+1:
-    if max_idx == 0 and i_idx == 0:
-        if inequalitys[i_idx] == "<":
-            pass
-        else:
-            max_answer.append(max_nums[max_idx])
-            max_idx += 1
-            i_idx += 1
+def dfs(x,y):
     
-    else:
-        if inequalitys[i_idx-1] == "<":
-            if inequalitys[i_idx] == "<":
-                compare.appendleft(max_nums[max_idx])
-                i_idx += 1
-                max_idx += 1
-            else:
-                for num in compare:
-                    max_answer.append(num)
-                max_answer.append(max_nums[max_idx])
-                max_idx += 1
-                i_idx += 1
-        else:
-            if inequalitys[i_idx] == ">":
-                max_answer.append(max_nums[max_idx])
-                max_idx += 1
-                i_idx += 1
-            else:
-                compare.appendleft(max_nums[max_idx])
-                max_idx += 1
-                compare.appendleft(max_nums[max_idx])
-                i_idx += 1
-        
-
-print(max_nums)            
-            
-            
-        
+    visited[x][y] = True
+    dx = [1,-1,0,0]
+    dy = [0,0,1,-1]
     
+    for i in range(4):
+        nx = x + dx[i]
+        ny = y + dy[i]
+        
+        if 0 <= nx < h and 0 <= ny < w:
+            if grid[nx][ny] == "#" and not visited[nx][ny]:
+                visited[nx][ny] = True
+                dfs(nx,ny)
+            
+    
+
+t = int(sys.stdin.readline())
+
+for _ in range(t):
+    h,w = map(int, sys.stdin.readline().split())
+    
+    grid = [list(sys.stdin.readline().rstrip()) for _ in range(h)]
+    sheep_group = 0
+    visited = [[False for _ in range(w)] for _ in range(h)]
+    
+    for i in range(h):
+        for j in range(w):
+            if grid[i][j] == "#" and not visited[i][j]:
+                sheep_group += 1
+                dfs(i,j)
+
+    print(sheep_group)
