@@ -1,34 +1,42 @@
 import sys
 from collections import deque
 
-dx = [-1, -1, -1, 0, 1, 0, 1, 1]
-dy = [-1, 0, 1, 1, 1, -1, 0, -1]
+def bfs():
+    queue = deque()
+    max_distance = 0  # 안전 거리의 최댓값을 저장할 변수
+    
+    # 큐에 모든 아기 상어의 위치를 저장하고, 방문 처리
+    for i in range(n):
+        for j in range(m):
+            if grid[i][j] == 1:
+                queue.append((i, j))
+                visited[i][j] = True
+    
+    while queue:
+        cur_x, cur_y = queue.popleft()
+        
+        dx = [-1,-1,0,1,1,1,0,-1]
+        dy = [0,1,1,1,0,-1,-1,-1]
+    
+        for i in range(8):
+            nx = cur_x + dx[i]
+            ny = cur_y + dy[i]
+        
+            if 0 <= nx < n and 0 <= ny < m:
+                if not visited[nx][ny]:
+                    visited[nx][ny] = True
+                    grid[nx][ny] = grid[cur_x][cur_y] + 1
+                    max_distance = max(max_distance, grid[nx][ny])  # 최대값 갱신
+                    queue.append([nx,ny])
+    
+    return max_distance - 1
+                
 
-# 입력 받기
 n, m = map(int, sys.stdin.readline().split())
-graph = [list(map(int, sys.stdin.readline().split())) for _ in range(n)]
 
-# 상어 위치 찾기
-queue = deque()
-for i in range(n):
-    for j in range(m):
-        if graph[i][j] == 1:  
-            queue.append([i, j])
+grid = [list(map(int, sys.stdin.readline().split())) for _ in range(n)]
 
-result = 0
-# BFS를 통해 안전 거리 구하기 
-while queue:
-    x, y = queue.popleft()
-    for i in range(8):
-        nx = x + dx[i]
-        ny = y + dy[i]
-        if nx < 0 or ny < 0 or nx >= n or ny >= m:
-            continue
-        if graph[nx][ny] != 0:
-            continue
-        queue.append([nx, ny])
-        graph[nx][ny] = graph[x][y] + 1
-        result = max(result, graph[x][y] + 1)
+visited = [[False for _ in range(m)] for _ in range(n)]
 
-# 안전 거리의 최댓값 출력하기 (시작 위치를 포함한 거리를 출력)
-print(result - 1) # 상어의 위치를 제외하고 결과 출력
+safe_distance = bfs()
+print(safe_distance)
