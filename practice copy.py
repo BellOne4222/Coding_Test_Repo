@@ -1,35 +1,40 @@
 import sys
+sys.setrecursionlimit(5000)
 
-def dfs(x,y):
-    
+def dfs(x, y):
+    distance = 0
     visited[x][y] = True
-    dx = [1,-1,0,0]
-    dy = [0,0,1,-1]
     
-    for i in range(4):
+    dx = [-1,-1,0,1,1,1,0,-1]
+    dy = [0,1,1,1,0,-1,-1,-1]
+    
+    for i in range(8):
         nx = x + dx[i]
         ny = y + dy[i]
         
-        if 0 <= nx < h and 0 <= ny < w:
-            if grid[nx][ny] == "#" and not visited[nx][ny]:
+        if 0 <= nx < n and 0 <= ny < m:
+            if grid[nx][ny] == 0 and not visited[nx][ny]:
+                distance += 1
                 visited[nx][ny] = True
                 dfs(nx,ny)
-            
+            elif grid[nx][ny] == 1 and not visited[nx][ny]:
+                visited[nx][ny] = True
+                return distance
     
+    return distance  # distance를 반환
 
-t = int(sys.stdin.readline())
+n, m = map(int, sys.stdin.readline().split())
 
-for _ in range(t):
-    h,w = map(int, sys.stdin.readline().split())
-    
-    grid = [list(sys.stdin.readline().rstrip()) for _ in range(h)]
-    sheep_group = 0
-    visited = [[False for _ in range(w)] for _ in range(h)]
-    
-    for i in range(h):
-        for j in range(w):
-            if grid[i][j] == "#" and not visited[i][j]:
-                sheep_group += 1
-                dfs(i,j)
+grid = [list(map(int, sys.stdin.readline().split())) for _ in range(n)]
 
-    print(sheep_group)
+safe_distance = 0
+
+visited = [[False for _ in range(m)] for _ in range(n)]
+
+for i in range(n):
+    for j in range(m):
+        if grid[i][j] == 0 and not visited[i][j]:
+            cnt = dfs(i, j)
+            safe_distance = max(safe_distance, cnt)
+
+print(safe_distance)
