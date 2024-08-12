@@ -1,57 +1,75 @@
+import sys
 from collections import deque
 
-a, b, c = map(int, input().split())
+def solve(a, b, c, A, B, C):
+    visited = set()  # 상태를 기록할 집합
+    answer = set()   # 유효한 결과를 기록할 집합
 
-# 경우의 수를 담을 큐
-q = deque()
-q.append((0, 0))
+    queue = deque([(a, b, c)])
+    visited.add((a, b, c))
+    
+    while queue:
+        a, b, c = queue.popleft()
+        
+        # 첫 번째 물통이 비어 있을 때의 세 번째 물통의 양을 기록
+        if a == 0:
+            answer.add(c)
+        
+        # 각 물통의 상태에 따라 물을 부을 수 있는 경우의 수를 탐색
+        # C -> A
+        if c > 0 and a < A:
+            move = min(c, A - a)
+            next_state = (a + move, b, c - move)
+            if next_state not in visited:
+                visited.add(next_state)
+                queue.append(next_state)
 
-# 방문 여부 저장
-visited = [[False] * (b + 1) for _ in range(a + 1)]
-visited[0][0] = True
+        # C -> B
+        if c > 0 and b < B:
+            move = min(c, B - b)
+            next_state = (a, b + move, c - move)
+            if next_state not in visited:
+                visited.add(next_state)
+                queue.append(next_state)
 
-answer = []
+        # B -> A
+        if b > 0 and a < A:
+            move = min(b, A - a)
+            next_state = (a + move, b - move, c)
+            if next_state not in visited:
+                visited.add(next_state)
+                queue.append(next_state)
 
-def pour(x, y):
-    # 방문하지 않았다면 방문 표시 후 큐에 추가
-    if not visited[x][y]:
-        visited[x][y] = True
-        q.append((x, y))
-        
-def bfs():
-    while q:
-        # A물통에 있는 물: x, B물통에 있는 물: y, C물통에 있는 물: z
-        x, y = q.popleft()
-        z = c - x - y
-        
-        # A 물통이 비어있는 경우에 C 물통에 남아있는 양 저장
-        if x == 0:
-            answer.append(z)
-            
-        # A에서 B로 물 이동
-        water = min(x, b - y)
-        pour(x - water, y + water)
-        # A에서 C로 물 이동
-        water = min(x, c - z)
-        pour(x - water, y)
-        
-        # B에서 C로 물 이동
-        water = min(y, c - z)
-        pour(x, y - water)
-        # B에서 A로 물 이동
-        water = min(y, a - x)
-        pour(x + water, y - water)
-        
-        # C에서 A로 물 이동
-        water = min(z, a - x)
-        pour(x + water, y)
-        # C에서 B로 물 이동
-        water = min(z, b - y)
-        pour(x, y + water)
-        
-bfs()
+        # B -> C
+        if b > 0 and c < C:
+            move = min(b, C - c)
+            next_state = (a, b - move, c + move)
+            if next_state not in visited:
+                visited.add(next_state)
+                queue.append(next_state)
 
-# 결과 정렬 후 출력
-answer.sort()
-for i in answer:
-    print(i, end=" ")
+        # A -> B
+        if a > 0 and b < B:
+            move = min(a, B - b)
+            next_state = (a - move, b + move, c)
+            if next_state not in visited:
+                visited.add(next_state)
+                queue.append(next_state)
+
+        # A -> C
+        if a > 0 and c < C:
+            move = min(a, C - c)
+            next_state = (a - move, b, c + move)
+            if next_state not in visited:
+                visited.add(next_state)
+                queue.append(next_state)
+    
+    # 결과를 정렬하여 출력
+    result = sorted(answer)
+    print(" ".join(map(str, result)))
+
+# 입력 받기
+A, B, C = map(int, sys.stdin.readline().split())
+
+# 문제 해결 함수 호출
+solve(0, 0, C, A, B, C)
