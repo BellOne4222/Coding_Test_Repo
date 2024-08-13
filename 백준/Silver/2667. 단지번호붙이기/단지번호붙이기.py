@@ -1,47 +1,47 @@
-# dfs
+import sys
+from collections import deque
 
-n = int(input())
-graph = []
-num = []
-
-for i in range(n):
-    graph.append(list(map(int, input())))
-
-dx = [0, 0, 1, -1]
-dy = [1, -1, 0, 0]
-
-
-def DFS(x, y):
-    if x < 0 or x >= n or y < 0 or y >= n:
-        return False
-
-    if graph[x][y] == 1:
-        global count
-        count += 1
-        graph[x][y] = 0
+def bfs(x,y):
+    link = 1
+    queue = deque()
+    queue.append([x,y])
+    visited[x][y] = True
+    
+    dx = [1,-1,0,0]
+    dy = [0,0,1,-1]
+    
+    while queue:
+        cur_x, cur_y = queue.popleft()
+        
         for i in range(4):
-            nx = x + dx[i]
-            ny = y + dy[i]
-            DFS(nx, ny)
-        return True
-    return False
+            nx = cur_x + dx[i]
+            ny = cur_y + dy[i]
+            
+            if 0 <= nx < n and 0 <= ny < n:
+                if grid[nx][ny] == 1 and not visited[nx][ny]:
+                    link += 1
+                    queue.append([nx,ny])
+                    visited[nx][ny] = True
+    return link                
+        
 
+n = int(sys.stdin.readline())
 
-count = 0
-result = 0
+grid = [list(map(int, sys.stdin.readline().rstrip())) for _ in range(n)]
+
+visited = [[False for _ in range(n)] for _ in range(n)]
+
+houses = []
 
 for i in range(n):
     for j in range(n):
-        if DFS(i, j) == True:
-            num.append(count)
-            result += 1
-            count = 0
+        if grid[i][j] == 1 and not visited[i][j]:
+            house = bfs(i,j)
+            houses.append(house)
 
-num.sort()
-print(result)
-for i in range(len(num)):
-    print(num[i])
+houses.sort()
 
-
+print(len(houses))
+for k in houses:
+    print(k)
             
-

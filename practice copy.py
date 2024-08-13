@@ -1,40 +1,47 @@
 import sys
-sys.setrecursionlimit(5000)
+from collections import deque
 
-def dfs(x, y):
-    distance = 0
+def bfs(x,y):
+    link = 1
+    queue = deque()
+    queue.append([x,y])
     visited[x][y] = True
     
-    dx = [-1,-1,0,1,1,1,0,-1]
-    dy = [0,1,1,1,0,-1,-1,-1]
+    dx = [1,-1,0,0]
+    dy = [0,0,1,-1]
     
-    for i in range(8):
-        nx = x + dx[i]
-        ny = y + dy[i]
+    while queue:
+        cur_x, cur_y = queue.popleft()
         
-        if 0 <= nx < n and 0 <= ny < m:
-            if grid[nx][ny] == 0 and not visited[nx][ny]:
-                distance += 1
-                visited[nx][ny] = True
-                dfs(nx,ny)
-            elif grid[nx][ny] == 1 and not visited[nx][ny]:
-                visited[nx][ny] = True
-                return distance
-    
-    return distance  # distance를 반환
+        for i in range(4):
+            nx = cur_x + dx[i]
+            ny = cur_y + dy[i]
+            
+            if 0 <= nx < n and 0 <= ny < n:
+                if grid[nx][ny] == 1 and not visited[nx][ny]:
+                    link += 1
+                    queue.append([nx,ny])
+                    visited[nx][ny] = True
+    return link                
+        
 
-n, m = map(int, sys.stdin.readline().split())
+n = int(sys.stdin.readline())
 
-grid = [list(map(int, sys.stdin.readline().split())) for _ in range(n)]
+grid = [list(map(int, sys.stdin.readline().rstrip())) for _ in range(n)]
 
-safe_distance = 0
+visited = [[False for _ in range(n)] for _ in range(n)]
 
-visited = [[False for _ in range(m)] for _ in range(n)]
+houses = []
 
 for i in range(n):
-    for j in range(m):
-        if grid[i][j] == 0 and not visited[i][j]:
-            cnt = dfs(i, j)
-            safe_distance = max(safe_distance, cnt)
+    for j in range(n):
+        if grid[i][j] == 1 and not visited[i][j]:
+            house = bfs(i,j)
+            houses.append(house)
 
-print(safe_distance)
+houses.sort()
+
+print(len(houses))
+for k in houses:
+    print(k)
+            
