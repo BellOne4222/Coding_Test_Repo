@@ -1,7 +1,7 @@
 import sys
 from collections import deque
 
-def solve(a, b, c, A, B, C):
+def bfs(a, b, c, A, B, C):
     visited = set()  # 상태를 기록할 집합
     answer = set()   # 유효한 결과를 기록할 집합
 
@@ -72,4 +72,4 @@ def solve(a, b, c, A, B, C):
 A, B, C = map(int, sys.stdin.readline().split())
 
 # 문제 해결 함수 호출
-solve(0, 0, C, A, B, C)
+bfs(0, 0, C, A, B, C)
