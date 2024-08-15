@@ -1,34 +1,35 @@
 import sys
 
-n = int(sys.stdin.readline())
+n,m = map(int, sys.stdin.readline().split())
 
-nums = list(map(int, sys.stdin.readline().split()))
-nums.sort()
+dvds = list(map(int , sys.stdin.readline().split()))
 
-m = int(sys.stdin.readline())
-
-start = 0
-end = max(nums)
+start = max(dvds)
+end = sum(dvds)
 
 
 while start <= end:
-    result = 0
-    
     mid = (start + end) // 2
     
-    for num in nums:
-        if mid >= num:
-            result += num
-        else:
-            result += mid
+    cnt = 1
+    total_dvd = 0
+    result = 0
     
-    if result > m:
+    for dvd in dvds:
+        if total_dvd + dvd > mid:
+            cnt += 1
+            total_dvd = 0
+        total_dvd += dvd 
+    
+    if cnt  <= m:
+        result = mid
         end = mid - 1
     else:
         start = mid + 1
 
-print(end)
+print(result)       
         
+          
     
 
 
