@@ -2,34 +2,31 @@ import sys
 
 n,m = map(int, sys.stdin.readline().split())
 
-dvds = list(map(int , sys.stdin.readline().split()))
+k_lst = []
 
-start = max(dvds)
-end = sum(dvds)
+for _ in range(n):
+    k_lst.append(int(sys.stdin.readline()))
 
+k_lst.sort()
+
+start = min(k_lst)
+end = max(k_lst) * m
 
 while start <= end:
     mid = (start + end) // 2
+    total_k = 0
     
-    cnt = 1
-    total_dvd = 0
-    result = 0
+    for k in k_lst:
+        total_k += (mid // k)
     
-    for dvd in dvds:
-        if total_dvd + dvd > mid:
-            cnt += 1
-            total_dvd = 0
-        total_dvd += dvd 
-    
-    if cnt  <= m:
-        result = mid
+    if total_k >= m:
         end = mid - 1
     else:
         start = mid + 1
 
-print(result)       
+print(mid)
         
-          
+        
     
 
 
