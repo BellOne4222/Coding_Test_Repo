@@ -1,26 +1,32 @@
-# 참고 : https://codingwonny.tistory.com/m/311
+import sys
 
-n, m = map(int,input().split())
-time = list(map(int,input().split()))
+n,m = map(int, sys.stdin.readline().split())
 
-start = max(time)
-end = sum(time)
+dvds = list(map(int , sys.stdin.readline().split()))
+
+start = max(dvds)
+end = sum(dvds)
+result = 0
 
 while start <= end:
-    mid = (start + end) // 2 
-
-    total = 0
-    count = 1
-    for t in time:
-        if total + t > mid:
-            count += 1
-            total = 0
-        total += t 
-
-    if count <= m:
-        ans = mid
+    mid = (start + end) // 2
+    
+    cnt = 1
+    total_dvd = 0
+    
+    
+    for dvd in dvds:
+        if total_dvd + dvd > mid:
+            cnt += 1
+            total_dvd = 0
+        total_dvd += dvd 
+    
+    if cnt  <= m:
+        result = mid
         end = mid - 1
     else:
         start = mid + 1
-    
-print(ans)
+
+print(result)       
+        
+          
