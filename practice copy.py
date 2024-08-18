@@ -1,44 +1,20 @@
 import sys
 
-n,m = map(int, sys.stdin.readline().split())
+t = int(sys.stdin.readline())
 
-k_lst = []
+stairs = [0] * (t + 1)
 
-for _ in range(n):
-    k_lst.append(int(sys.stdin.readline()))
+for i in range(1, t + 1):
+    stair = int(sys.stdin.readline())
+    stairs[i] = stair
 
-k_lst.sort()
+dp_table = [0 for _ in range(t + 1)]
 
-start = min(k_lst)
-end = max(k_lst) * m
+dp_table[1] = stairs[1]
+dp_table[2] = stairs[1] + stairs[2]
+dp_table[3] = max(stairs[1] + stairs[3], stairs[2] + stairs[3])
 
-while start <= end:
-    mid = (start + end) // 2
-    total_k = 0
-    
-    for k in k_lst:
-        total_k += (mid // k)
-    
-    if total_k >= m:
-        end = mid - 1
-    else:
-        start = mid + 1
+for i in range(4, t + 1):
+    dp_table[i] = max(dp_table[i - 3] + stairs[i - 1] + stairs[i], dp_table[i - 2] + stairs[i])
 
-print(mid)
-        
-        
-    
-
-
-
-
-
-        
-        
-            
-        
-             
-        
-    
-    
-    
+print(dp_table[t])
