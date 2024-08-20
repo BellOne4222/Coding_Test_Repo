@@ -1,28 +1,27 @@
 import sys
 
-n = int(sys.stdin.readline())
+n,m = map(int, sys.stdin.readline().split())
 
-grapes = [0] * 10001
+k = int(sys.stdin.readline())
 
-for i in range(1,n+1):
-    grapes[i] = int(sys.stdin.readline())
+construction = [[[] for _ in range(m+1)] for _ in range(n+1)]
 
-dp_table = [0] * 10001
+for _ in range(k):
+    a,b,c,d = map(int, sys.stdin.readline().split())
+    construction[a][b].append([c,d])
+    construction[c][d].append([a,b])
 
-dp_table[1] = grapes[1]
-dp_table[2] = grapes[2]
-dp_table[3] = max((dp_table[1] + grapes[3]), (dp_table[2] + grapes[3]))
+dp_table = [[0 for _ in range(m+1)] for _ in range(n+1)]
 
-for j in range(4,n):
-    cnt = 0
-    for k in range(1,j):
-        cnt += 1
-        if cnt != 3:
-            dp_table[j] += grapes[k]
-        else:
-            cnt = 0
-    dp_table[j] += grapes[j]
+dp_table[0][0] = 1
+
+for i in range(n+1):
+    for j in range(m+1):
+        if (i > 0) and [i-1,j] not in construction[i][j]:
+            dp_table[i][j] += dp_table[i-1][j]
         
-        
+        if (j > 0) and [i,j-1] not in construction[i][j]:
+            dp_table[i][j] += dp_table[i][j-1]
 
-print(dp_table[n-1])
+print(dp_table[n][m])
+        

@@ -1,42 +1,28 @@
 import sys
-from collections import deque
+input = sys.stdin.readline
 
-def bfs():
-    queue = deque()
-    max_distance = 0  # 안전 거리의 최댓값을 저장할 변수
-    
-    # 큐에 모든 아기 상어의 위치를 저장하고, 방문 처리
-    for i in range(n):
-        for j in range(m):
-            if grid[i][j] == 1:
-                queue.append((i, j))
-                visited[i][j] = True
-    
-    while queue:
-        cur_x, cur_y = queue.popleft()
-        
-        dx = [-1,-1,0,1,1,1,0,-1]
-        dy = [0,1,1,1,0,-1,-1,-1]
-    
-        for i in range(8):
-            nx = cur_x + dx[i]
-            ny = cur_y + dy[i]
-        
-            if 0 <= nx < n and 0 <= ny < m:
-                if not visited[nx][ny]:
-                    visited[nx][ny] = True
-                    grid[nx][ny] = grid[cur_x][cur_y] + 1
-                    max_distance = max(max_distance, grid[nx][ny])  # 최대값 갱신
-                    queue.append([nx,ny])
-    
-    return max_distance - 1
-                
+n, m = map(int, input().split())
+k = int(input())
 
-n, m = map(int, sys.stdin.readline().split())
+# 1. 공사 중인 도로 리스트 생성
+construction = [[[] for _ in range(m+1)] for _ in range(n+1)]
+for _ in range(k) :
+    a, b, c, d = map(int, input().split())
+    construction[a][b].append((c, d))
+    construction[c][d].append((a, b))
+# 2. dp 생성
+dp = [[0 for _ in range(m+1)] for _ in range(n+1)]
+# 3. 초기값 설정
+dp[0][0] = 1
+# 4.
+for i in range(n+1) :
+    for j in range(m+1) :
+        # 4-1. 현재 위치의 위쪽이 맵을 벗어나지 않으면서 공사 중인 도로가 아닐 경우
+        if i-1 >= 0 and (i-1, j) not in construction[i][j] :
+            dp[i][j] += dp[i-1][j]
 
-grid = [list(map(int, sys.stdin.readline().split())) for _ in range(n)]
-
-visited = [[False for _ in range(m)] for _ in range(n)]
-
-safe_distance = bfs()
-print(safe_distance)
+        # 4-2. 현재 위치의 왼쪽이 맵을 벗어나지 않으면서 공사 중인 도로가 아닐 경우
+        if j-1 >= 0 and (i, j-1) not in construction[i][j] :
+            dp[i][j] += dp[i][j-1]
+# 5. 결과 출력
+print(dp[-1][-1])
