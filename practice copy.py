@@ -2,13 +2,27 @@ import sys
 
 n = int(sys.stdin.readline())
 
-a = list(map(int, sys.stdin.readline().split()))
+grapes = [0] * 10001
 
-dp_table = [1] * 1001
+for i in range(1,n+1):
+    grapes[i] = int(sys.stdin.readline())
 
-for i in range(n):
-    for j in range(i):
-        if a[i] < a[j]:
-            dp_table[i] = max(dp_table[i], dp_table[j] + 1)
+dp_table = [0] * 10001
 
-print(max(dp_table))
+dp_table[1] = grapes[1]
+dp_table[2] = grapes[2]
+dp_table[3] = max((dp_table[1] + grapes[3]), (dp_table[2] + grapes[3]))
+
+for j in range(4,n):
+    cnt = 0
+    for k in range(1,j):
+        cnt += 1
+        if cnt != 3:
+            dp_table[j] += grapes[k]
+        else:
+            cnt = 0
+    dp_table[j] += grapes[j]
+        
+        
+
+print(dp_table[n-1])
