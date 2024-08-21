@@ -1,27 +1,21 @@
 import sys
 
-n,m = map(int, sys.stdin.readline().split())
+n,k = map(int, sys.stdin.readline().split())
 
-k = int(sys.stdin.readline())
+table = list(map(str, sys.stdin.readline().rstrip()))     
 
-construction = [[[] for _ in range(m+1)] for _ in range(n+1)]
+visited = [False] * n
 
-for _ in range(k):
-    a,b,c,d = map(int, sys.stdin.readline().split())
-    construction[a][b].append([c,d])
-    construction[c][d].append([a,b])
+eaten = 0
 
-dp_table = [[0 for _ in range(m+1)] for _ in range(n+1)]
+for i in range(n):
+    if table[i] == "P":
+        for j in range(i-k, i+k+1):
+            if 0 <= j < n:
+                if table[j] == "H" and not visited[j]:
+                    visited[j] = True
+                    eaten += 1
+                    break
 
-dp_table[0][0] = 1
-
-for i in range(n+1):
-    for j in range(m+1):
-        if (i > 0) and [i-1,j] not in construction[i][j]:
-            dp_table[i][j] += dp_table[i-1][j]
-        
-        if (j > 0) and [i,j-1] not in construction[i][j]:
-            dp_table[i][j] += dp_table[i][j-1]
-
-print(dp_table[n][m])
-        
+print(eaten)
+                    
