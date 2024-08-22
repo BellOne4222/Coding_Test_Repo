@@ -1,21 +1,26 @@
 import sys
 
-n,k = map(int, sys.stdin.readline().split())
+n = int(sys.stdin.readline())
 
-table = list(map(str, sys.stdin.readline().rstrip()))     
+h = list(map(int, sys.stdin.readline().split()))
 
-visited = [False] * n
-
-eaten = 0
+a = list(map(int, sys.stdin.readline().split()))
 
 for i in range(n):
-    if table[i] == "P":
-        for j in range(i-k, i+k+1):
-            if 0 <= j < n:
-                if table[j] == "H" and not visited[j]:
-                    visited[j] = True
-                    eaten += 1
-                    break
+    cur = h[i]
+    h[i] = [cur, a[i]]
 
-print(eaten)
-                    
+
+h.sort(key = lambda x:x[1])
+
+total = h[0][0]
+h[0][0] = 0
+
+for j in range(1,n):
+    
+    for k in range(n):
+        h[k][0] = h[k][0] + h[k][1]
+    total += h[j][0]
+
+print(total)
+    
