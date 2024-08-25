@@ -1,39 +1,43 @@
 import sys
-from collections import deque
 
-n,a,b = map(int, sys.stdin.readline().split())
+c,r = map(int, sys.stdin.readline().split())
 
-a_lst = list(map(int, sys.stdin.readline().split()))
+k = int(sys.stdin.readline())
 
-b_lst = list(map(int, sys.stdin.readline().split()))
+grid = [[0 for _ in range(r)] for _ in range(c)]
 
-a_lst.sort(reverse=True)
-b_lst.sort(reverse=True)
+visited = [[0 for _ in range(r)] for _ in range(c)]
 
-a_lst = deque(a_lst)
-b_lst = deque(b_lst)
+dx = [0,1,0,-1]
+dy = [1,0,-1,0]
 
-result = []
+cur = 1
+cur_r = 0
+cur_c = 0
+dir = 0
 
-cnt = n // 2
-remain_cnt = n % 2
-
-if remain_cnt != 0:
-    result.append(a_lst.popleft())
-
-if cnt != 0:
-    for _ in range(cnt):
-        if len(a_lst) > 1:
-            tile_1 = a_lst[0] + a_lst[1]
-            tile_2 = b_lst[0]
-            
-            if tile_1 > tile_2:
-                result.append(a_lst.popleft())
-                result.append(a_lst.popleft())
-                
-            else:
-                result.append(b_lst.popleft())
+for i in range(1, r*c+1):
+    
+    if i == k:
+        break
+    
+    else:
+        if 0 <= cur_c < c and 0 <= cur_r < r and not visited[cur_c][cur_r]:
+            grid[cur_c][cur_r] = i
+            visited[cur_c][cur_r] = True
+            cur_c += dx[dir]
+            cur_r += dy[dir]
         else:
-            result.append(b_lst.popleft())
+            cur_c -= dx[dir]
+            cur_r -= dy[dir]
+            
+            dir = (dir + 1) % 4
 
-print(sum(result))
+            cur_c += dx[dir]
+            cur_r += dy[dir]
+            
+    
+    
+            
+        
+    
