@@ -1,41 +1,35 @@
 import sys
+import heapq
 
-c,r = map(int, sys.stdin.readline().split())
-
-k = int(sys.stdin.readline())
-
-grid = [[0 for _ in range(r)] for _ in range(c)]
-
-visited = [[0 for _ in range(r)] for _ in range(c)]
-
-dx = [0,1,0,-1]
-dy = [1,0,-1,0]
-
-cur = 1
-cur_r = 0
-cur_c = 0
-dir = 0
-
-for i in range(1, r*c+1):
+def dijkstra(start):
+    queue = []
     
-    if i == k:
-        result = [cur_c+1, cur_r+1]
-        print(" ".join(map(str,result)))
-        break
+    heapq.heappush(queue, (0, start))
+    distance[start] = 0
     
-    else:
-        
-        grid[cur_c][cur_r] = i
-        visited[cur_c][cur_r] = True
-        cur_c += dx[dir]
-        cur_r += dy[dir]
-        if cur_c < 0 or cur_r < 0 or cur_c >= c or cur_r >= r or visited[cur_c][cur_r]:
-            cur_c -= dx[dir]
-            cur_r -= dy[dir]
-            
-            dir = (dir + 1) % 4
+    while queue:
+        dist, now = heapq.heappop(queue)
+        if distance[now] < dist:
+            continue
+        for i in graph[now]:
+            c = dist + i[1]  # c는 현재까지의 거리(dist)와 다음 도시로 가는 거리(i[1])의 합
+            if c < distance[i[0]]:
+                distance[i[0]] = c  # 'cost'가 아닌 'c'로 수정
+                heapq.heappush(queue, (c, i[0]))  # 'cost'가 아닌 'c'로 수정
 
-            cur_c += dx[dir]
-            cur_r += dy[dir]
+n = int(sys.stdin.readline().strip())
+m = int(sys.stdin.readline().strip())
 
-            
+INF = int(1e9)
+graph = [[] for _ in range(n+1)]
+distance = [INF] * (n+1)
+
+for _ in range(m):
+    s, e, cost = map(int, sys.stdin.readline().split())
+    graph[s].append((e, cost))
+
+start_node, end_node = map(int, sys.stdin.readline().split())
+
+dijkstra(start_node)
+
+print(distance[end_node])
