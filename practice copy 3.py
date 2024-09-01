@@ -1,35 +1,46 @@
 import sys
-import heapq
+sys.setrecursionlimit(10000)
 
-def dijkstra(start):
-    queue = []
+def dfs(graph, v, visited, parent):
+    visited[v] = True
+    for i in graph[v]:
+        if not visited[i]:
+            # 방문하지 않은 노드를 재귀적으로 방문
+            if not dfs(graph, i, visited, v):
+                return False
+        elif i != parent:
+            # 이미 방문한 노드가 현재 노드의 부모가 아니라면 사이클이 존재
+            return False
+    return True
+
+case_number = 0
+while True:
+    n, m = map(int, sys.stdin.readline().split())
     
-    heapq.heappush(queue, (0, start))
-    distance[start] = 0
+    if n == 0 and m == 0:
+        break
+
+    case_number += 1
+    graph = [[] for _ in range(n + 1)]
+    visited = [False] * (n + 1)
     
-    while queue:
-        dist, now = heapq.heappop(queue)
-        if distance[now] < dist:
-            continue
-        for i in graph[now]:
-            c = dist + i[1]  # c는 현재까지의 거리(dist)와 다음 도시로 가는 거리(i[1])의 합
-            if c < distance[i[0]]:
-                distance[i[0]] = c  # 'cost'가 아닌 'c'로 수정
-                heapq.heappush(queue, (c, i[0]))  # 'cost'가 아닌 'c'로 수정
-
-n = int(sys.stdin.readline().strip())
-m = int(sys.stdin.readline().strip())
-
-INF = int(1e9)
-graph = [[] for _ in range(n+1)]
-distance = [INF] * (n+1)
-
-for _ in range(m):
-    s, e, cost = map(int, sys.stdin.readline().split())
-    graph[s].append((e, cost))
-
-start_node, end_node = map(int, sys.stdin.readline().split())
-
-dijkstra(start_node)
-
-print(distance[end_node])
+    # 단방향 그래프 생성
+    for _ in range(m):
+        u, v = map(int, sys.stdin.readline().split())
+        graph[u].append(v)  # 단방향 간선으로 추가
+    
+    tree_count = 0
+    
+    # 트리 개수 세기
+    for i in range(1, n + 1):
+        if not visited[i]:
+            if dfs(graph, i, visited, -1):
+                tree_count += 1
+    
+    # 결과 출력
+    if tree_count == 0:
+        print(f"Case {case_number}: No trees.")
+    elif tree_count == 1:
+        print(f"Case {case_number}: There is one tree.")
+    else:
+        print(f"Case {case_number}: A forest of {tree_count} trees.")
